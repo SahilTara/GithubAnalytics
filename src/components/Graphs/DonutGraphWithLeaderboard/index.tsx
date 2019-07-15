@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Row, Col } from "react-bootstrap";
-import { RadialChart, RadialChartProps, Hint, RadialChartPoint } from 'react-vis';
+import { RadialChart, RadialChartProps, RadialChartPoint, Hint } from 'react-vis';
 import IDonutGraphData from '../../../types/IGraphData';
 import styles from "./styles.module.css";
 import classNames from 'classnames';
@@ -33,14 +33,14 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
     sum += item.value;
   });
   data.slice(0, max).forEach((item: IDonutGraphData) => {
-    theData.push({angle: item.value, label: item.label + "\t" 
-                                      + category + ": " + item.value + "\t"
+    theData.push({angle: item.value, label: item.label + " • " 
+                                      + category + ": " + item.value + " • "
                                       + "Percentage: " + Math.round(item.value*10000/sum)/100 + "%"});
     topMax += item.value;
   });
   if (sum !== topMax) {
-    theData.push({angle: (sum-topMax), label: "Other\t" 
-                                        + category + ": " + (sum-topMax) + "\t"
+    theData.push({angle: (sum-topMax), label: "Other • " 
+                                        + category + ": " + (sum-topMax) + " • "
                                         + "Percentage: " + Math.round((sum-topMax)*10000/sum)/100 + "%"});
   }
 
@@ -52,11 +52,11 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
   return (
     <div>
       <Card>
-        <h2>{title}</h2>
+        <h2 style={{paddingTop: "20px", marginBottom: "-50px"}}>{title}</h2>
         <div className={classNames(styles.graph_center)}>
             <RadialChart
               data={theData}
-              getLabel={d => d.label? d.label.split("\t")[0] : undefined}
+              getLabel={d => d.label? d.label.split(" • ")[0] : undefined}
               labelsRadiusMultiplier={1.45}
               labelsStyle={{fontSize: 16, fill: '#222'}}
               showLabels
@@ -66,7 +66,7 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
               height={window.innerWidth / 5}
               padAngle={0.05}
               onValueMouseOver={(datapoint) => mouseOver(datapoint)}
-              onValueMouseOut={() => setState({value: false})}
+              // onValueMouseOut={() => setState({value: false})}
             > 
           </RadialChart>
           {state.value? 
@@ -77,8 +77,8 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
             </div>) : 
             <div className={classNames(styles.tooltip_box)}>
               Hover over a pie slice for more information.
-          </div>
-        }
+            </div>
+          }
         </div>
         <div className={classNames(styles.leaderboard)}>
           <Row>
@@ -91,8 +91,8 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
               <>
                 <Row>
                   <Col>{(value.label && !value.label.includes("Other"))? index + 1 : undefined}</Col>
-                  <Col xs={{span: "6"}}>{value.label? value.label.split("\t")[0] : undefined}</Col>
-                  <Col>{value.label? value.label.split("\t")[1].split(" ")[1] : undefined}</Col>
+                  <Col xs={{span: "6"}}>{value.label? value.label.split(" • ")[0] : undefined}</Col>
+                  <Col>{value.label? value.label.split(" • ")[1].split(" ")[1] : undefined}</Col>
                 </Row>
               </>
             );

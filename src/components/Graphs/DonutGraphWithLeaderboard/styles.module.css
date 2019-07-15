@@ -14,14 +14,11 @@
   border-top: 1px solid #DDDDDD;
 }
 
-.tooltip {
-  display: 'flex';
-  color: '#fff';
-  background-color: '#000';
-  align-items: 'center';
-  padding: '5px';
+.leaderboard > div:nth-child(n+2) > div:nth-child(2) {
+  text-align: left;
 }
 
 .tooltip_box {
   height: 2rem;
+  margin-top: -20px;
 }
