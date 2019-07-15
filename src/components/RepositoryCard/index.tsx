@@ -9,13 +9,20 @@ import classNames from "classnames";
 import { Row } from "react-bootstrap";
 interface IProps {
   info: IRepository;
+  onClick: (repository: IRepository) => void;
 }
 
 const RepositoryCard: React.FC<IProps> = props => {
   const { author, name, stars, avatar, forks, description } = props.info;
+  const { onClick } = props;
+
+  const clickHandler = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    onClick(props.info);
+  };
 
   return (
-    <Card className={classNames(styles.card)}>
+    <Card className={classNames(styles.card)} onClick={clickHandler}>
       <Card.Body>
         <Card.Title className={classNames(styles.title)}>
           <Row className={classNames("justify-content-between")}>
@@ -31,7 +38,7 @@ const RepositoryCard: React.FC<IProps> = props => {
         </Card.Title>
         <Card.Text>{description}</Card.Text>
         <Row className={classNames(styles.littlestats)}>
-          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0}}>
+          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0 }}>
             <Row>
               <div className={classNames(styles.octicon)}>
                 <Octicon icon={Star} />
@@ -39,7 +46,7 @@ const RepositoryCard: React.FC<IProps> = props => {
               <div>{stars}</div>
             </Row>
           </Col>
-          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0}}>
+          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0 }}>
             <Row>
               <div className={classNames(styles.octicon)}>
                 <Octicon icon={RepoForked} />
