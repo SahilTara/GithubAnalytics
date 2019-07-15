@@ -1,0 +1,27 @@
+.graph_center {
+  align-self: center;
+  align-content: center;
+}
+
+.leaderboard {
+  background-color: #F0F8FF;
+  font-size: 1.2rem;
+}
+
+.leaderboard > div {
+  padding: 10px 0px;
+  margin: 0px;
+  border-top: 1px solid #DDDDDD;
+}
+
+.tooltip {
+  display: 'flex';
+  color: '#fff';
+  background-color: '#000';
+  align-items: 'center';
+  padding: '5px';
+}
+
+.tooltip_box {
+  height: 2rem;
+}

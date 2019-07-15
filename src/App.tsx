@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import GithubApiService from "./services/GithubApiService";
 import Home from "./containers/Home";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import RepoInfoPage from "./containers/RepoInfoPage";
