@@ -30,17 +30,20 @@ const RepositoryCard: React.FC<IProps> = props => {
           </Row>
         </Card.Title>
         <Card.Text>{description}</Card.Text>
-        <Row>
-          <Col xs={{ span: 2, offset: 0 }}>
+        <Row className={classNames(styles.littlestats)}>
+          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0}}>
             <Row>
-              <Octicon icon={Star} />
-
+              <div className={classNames(styles.octicon)}>
+                <Octicon icon={Star} />
+              </div>
               <div>{stars}</div>
             </Row>
           </Col>
-          <Col>
+          <Col xs={{ span: 2, offset: 0 }} sm={{ span: 4, offset: 0}}>
             <Row>
-              <Octicon icon={RepoForked} />
+              <div className={classNames(styles.octicon)}>
+                <Octicon icon={RepoForked} />
+              </div>
               <div>{forks}</div>
             </Row>
           </Col>

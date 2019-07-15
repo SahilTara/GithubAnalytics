@@ -9,6 +9,7 @@ import { getPopularRepositoriesAction } from "../../actions/dashboardInfoActions
 import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import RootAction from "../../actions";
+import HorizontalScroller from "../../components/HorizontalScroller";
 
 interface IStateProps {
   popularRepos: IRepository[];
@@ -29,14 +30,7 @@ const Home: React.FC<Props> = props => {
   return (
     <Container>
       <div>
-        {popularRepos.map((repository: IRepository) => {
-          return (
-            <RepositoryCard
-              key={`${repository.author}/${repository.name}`}
-              info={repository}
-            />
-          );
-        })}
+        <HorizontalScroller title={"Explore popular repositories"} repos={popularRepos}></HorizontalScroller>
       </div>
     </Container>
   );
