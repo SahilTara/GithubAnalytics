@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import DonutGraphWithLeaderboard from "../../components/Graphs/DonutGraphWithLeaderboard";
 
 interface IProps {
@@ -22,8 +22,14 @@ const CommitsPage: React.FC<IProps> = props => {
   return (
     <Container>
       <div>
-        <DonutGraphWithLeaderboard 
-          data={fakeData} title={"Commit Percentage By User"} maximum={5} />
+        <Row>
+          <Col>
+          </Col>
+          <Col>
+            <DonutGraphWithLeaderboard 
+              data={fakeData} title={"Top Users by Commits on Main Branch"} category={"Commits"} maximum={5} />
+          </Col>
+        </Row>
       </div>
     </Container>
   );
