@@ -1,5 +1,8 @@
-import OctoKit, { ReposGetResponse } from "@octokit/rest";
+import OctoKit, { ReposGetResponse, PullsGetResponse } from "@octokit/rest";
 import IRepository from "../types/IRespository";
+import { IPullRequest } from "../types/IPullRequest";
+
+OctoKit.plugin(require("@octokit/plugin-throttling"));
 
 const octokit = new OctoKit({
   auth: process.env.REACT_APP_GITHUB_API_KEY,
@@ -9,6 +12,21 @@ const octokit = new OctoKit({
     info: () => {},
     warn: console.warn,
     error: console.error
+  },
+  onRateLimit: (retryAfter: any, options: any) => {
+    console.warn(
+      `Request quota exhausted for request ${options.method} ${options.url}`
+    );
+
+    if (options.request.retryCount === 0) {
+      // only retries once
+      console.log(`Retrying after ${retryAfter} seconds!`);
+      return true;
+    }
+  },
+  onAbuseLimit: (retryAfter: number, options: any) => {
+    // does not retry, only logs a warning
+    console.warn(`Abuse detected for request ${options.method} ${options.url}`);
   }
 });
 
@@ -25,6 +43,25 @@ class GithubApiService {
     const repositories = response as IRepository[];
 
     return repositories.slice(0, top);
+  }
+
+  public async getPullRequests(repository: IRepository) {
+    const options = octokit.pulls.list.endpoint.merge({
+      owner: repository.author,
+      repo: repository.name,
+      state: "all"
+    });
+    return await octokit
+      .paginate(options)
+      .then(response => Promise.resolve(response as PullsGetResponse[]))
+      .then(pullRequests =>
+        pullRequests.map<IPullRequest>(pullRequest => ({
+          owner: pullRequest.user.login,
+          createdAt: pullRequest.created_at,
+          mergedAt: pullRequest.merged_at,
+          merged: !!pullRequest.merged_at
+        }))
+      );
   }
 
   public async getUserRepos() {
