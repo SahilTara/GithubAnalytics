@@ -3,13 +3,14 @@ import IRepository from "../../types/IRespository";
 import ItemsCarousel from "react-items-carousel";
 import RepositoryCard from "../RepositoryCard";
 
+// Horizontal scroller takes in two parameters: Title and repositories
 interface IProps {
   title: string;
-  cards: IRepository[];
+  repos: IRepository[];
 }
 
 const HorizontalScroller: React.FC<IProps> = props => {
-  const cards = props.cards;
+  const repos = props.repos;
   const title = props.title;
   const [state, setState] = useState({activeItemIndex: 0});
 
@@ -31,7 +32,7 @@ const HorizontalScroller: React.FC<IProps> = props => {
           rightChevron={'>'}
           leftChevron={'<'}
         >
-          {cards.map((repository: IRepository) => {
+          {repos.map((repository: IRepository) => {
           return (
             <RepositoryCard
               key={`${repository.author}/${repository.name}`}

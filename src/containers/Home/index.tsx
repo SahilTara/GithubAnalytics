@@ -30,7 +30,7 @@ const Home: React.FC<Props> = props => {
   return (
     <Container>
       <div>
-        <HorizontalScroller title={"Explore popular repositories"} cards={popularRepos}></HorizontalScroller>
+        <HorizontalScroller title={"Explore popular repositories"} repos={popularRepos}></HorizontalScroller>
       </div>
     </Container>
   );
