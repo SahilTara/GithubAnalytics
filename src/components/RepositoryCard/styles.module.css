@@ -1,0 +1,19 @@
+.profilePic {
+  width: 20px;
+  height: 20px;
+}
+
+.card {
+  width: 20rem;
+  max-width: 50%;
+  height: 25rem;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+}
+
+.title {
+  padding: 0;
+  padding: 0;
+  display: inline-block;
+}
