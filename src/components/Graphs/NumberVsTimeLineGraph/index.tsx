@@ -5,14 +5,15 @@ import {
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  VerticalBarSeries,
   ChartLabel,
-  VerticalBarSeriesPoint
+  MarkSeriesPoint,
+  LineMarkSeries
 } from 'react-vis';
 import IBarGraphData from '../../../types/IGraphData/IBarGraphData';
 import classNames from 'classnames';
 import styles from "./styles.module.css";
 import { Card } from 'react-bootstrap';
+import "./style.css";
 
 // takes in a title, a category, a list of {x, y, style?}, 
 // and a maximum results to display (remaining are added to Other)
@@ -24,10 +25,15 @@ interface IProps {
   yAxisLabel: string;
 }
 
-const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
+const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
   let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
+
+  let theData = JSON.parse(JSON.stringify(data));
+  theData.sort((a: IBarGraphData, b: IBarGraphData) => {
+    return a.x - b.x;
+  });
   
   data.forEach( (item: {x: number, y: number}) => {
     if (item.x > maxX) {
@@ -50,7 +56,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
     return minX + xInterval*i;
   });
 
-  let mouseOver = (datapoint: VerticalBarSeriesPoint)=>{
+  let mouseOver = (datapoint: MarkSeriesPoint)=>{
     setState({value: true});
     setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
   }
@@ -101,8 +107,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
             }}
           />
 
-        <VerticalBarSeries data={data} 
-          style={{stroke: "white"}}
+        <LineMarkSeries data={theData} 
           onNearestX={ datapoint => mouseOver(datapoint)}
         />
       </XYPlot>
@@ -111,11 +116,11 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
             {tooltip}
           </div>) : 
         <div className={classNames(styles.tooltip_box)}>
-          Hover over a bar for more information.
+          Hover over a data point for more information.
         </div>
       }
     </Card>
   );
 }
 
-export default NumberVsTimeBarGraph;
+export default NumberVsTimeLineGraph;

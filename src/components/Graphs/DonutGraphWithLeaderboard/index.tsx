@@ -51,7 +51,7 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
 
   return (
     <div>
-      <Card>
+      <Card style={{marginBottom: "20px"}}>
         <h2 style={{paddingTop: "20px", marginBottom: "-50px"}}>{title}</h2>
         <div className={classNames(styles.graph_center)}>
             <RadialChart
