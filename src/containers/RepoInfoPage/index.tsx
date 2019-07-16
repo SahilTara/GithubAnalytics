@@ -185,12 +185,11 @@ const RepoInfoPage: React.FC<Props> = props => {
             linesDeleted={linesDeleted}
           />
         )) || (
-          <div>
-            <Spinner
-              className={classNames(styles.vert_center)}
-              name="ball-scale-multiple"
-            />
-          </div>
+          <Container>
+            <div className={classNames(styles.vert_centre)}>
+              <Spinner name="ball-scale-multiple" />
+            </div>
+          </Container>
         )}
       </Tab>
     </Tabs>
