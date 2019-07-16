@@ -1156,6 +1156,11 @@
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
 
+"@octokit/oauth-login-url@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@octokit/oauth-login-url/-/oauth-login-url-2.1.2.tgz#364ef24a0aa4191f0f6ea6dfc64a999e460f9adf"
+  integrity sha512-ryDOt47Rno7+PG5XbdwoFTlADrH/f+XFf//keJngEeBNAe6gKrdcLL4vofa5005nl1ZIcIlgSnbKtKQhiKefMA==
+
 "@octokit/plugin-throttling@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-throttling/-/plugin-throttling-2.6.0.tgz#0b3107c2267e3a8cf6f63925847ec3ebe9e0aa8d"
