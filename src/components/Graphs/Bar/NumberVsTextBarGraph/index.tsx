@@ -10,7 +10,7 @@ import {
   VerticalBarSeriesPoint,
   FlexibleWidthXYPlot
 } from 'react-vis';
-import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
+import ITextBarGraphData from '../../../../types/IGraphData/ITextBarGraphData';
 import classNames from 'classnames';
 import styles from "./styles.module.css";
 import { Card } from 'react-bootstrap';
@@ -19,20 +19,20 @@ import { Card } from 'react-bootstrap';
 // and a maximum results to display (remaining are added to Other)
 interface IProps {
   title: string;
-  data: IBarGraphData[];
+  data: ITextBarGraphData[];
   xAxisLabel: string;
   yAxisLabel: string;
 }
 
-const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
-  let maxX = 0, minX = 0, maxY = 0, minY = +Infinity;
+const NumberVsTextBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
+  let maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
+
+  const xTicks: string[] = [];
   
-  data.forEach( (item: {x: number, y: number}) => {
-    if (item.x > maxX) {
-      maxX = item.x;
-    }
+  data.forEach( (item: {x: string, y: number}) => {
+    xTicks.push(item.x);
     if (item.y > maxY) {
       maxY = item.y;
     } else if (item.y < minY) {
@@ -43,9 +43,6 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
   const yInterval = Math.ceil((maxY * 1.1)/4);
   const yTicks = [0, yInterval, yInterval*2, yInterval*3, yInterval*4];
 
-  const xInterval = Math.ceil(maxX/4);
-  const xTicks = [minX, xInterval, xInterval*2, xInterval*3, xInterval*4];
-
   let mouseOver = (datapoint: VerticalBarSeriesPoint)=>{
     setState({value: true});
     setTooltip(xAxisLabel + ": " + datapoint.x + " • " + yAxisLabel + ": " + datapoint.y);
@@ -55,21 +52,21 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
     <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
       <h2 style={{paddingTop: "20px"}}>{title}</h2>
         <FlexibleWidthXYPlot
-          xDomain={[minX, xTicks[4]]}
           yDomain={[0, yTicks[4]]}
           height={300}
           margin={{left: 80, right: 50, bottom: 80}}
+          xType="ordinal"
         >
           <VerticalGridLines />
           <HorizontalGridLines />
 
-          <XAxis tickValues={xTicks} />
+          <XAxis tickValues={xTicks} tickLabelAngle={-30} />
           <ChartLabel
             text={xAxisLabel}
             className="alt-x-label"
             includeMargin={true}
             xPercent={0.48}
-            yPercent={0.64}
+            yPercent={0.70}
           />
           
           <YAxis tickValues={yTicks} />
@@ -102,4 +99,4 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
   );
 }
 
-export default NumberVsNumberBarGraph;
+export default NumberVsTextBarGraph;
