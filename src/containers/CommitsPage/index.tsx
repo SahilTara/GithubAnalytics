@@ -3,8 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import DonutGraphWithLeaderboard from "../../components/Graphs/Radial/DonutGraphWithLeaderboard";
 import SummaryCard from "../../components/SummaryCard";
 import NumberVsTimeBarGraph from "../../components/Graphs/Bar/NumberVsTimeBarGraph";
-import NumberVsNumberBarGraph from "../../components/Graphs/Bar/NumberVsNumberBarGraph";
-import NumberVsTimeLineGraph from "../../components/Graphs/Line/NumberVsTimeLineGraph";
+import NumberVsTimeMultiLineGraph from "../../components/Graphs/Line/NumberVsTimeMultiLineGraph";
 
 interface IProps {}
 
@@ -52,6 +51,21 @@ const CommitsPage: React.FC<IProps> = props => {
     { x: new Date("May 13 2017").getTime(), y: 1186 }
   ];
 
+  const lineDataDeletion = [
+    { x: new Date("May 20 2017").getTime(), y: 542 },
+    { x: new Date("May 23 2017").getTime(), y: 217 },
+    { x: new Date("May 24 2017").getTime(), y: 2670 },
+    { x: new Date("May 26 2017").getTime(), y: 963 },
+    { x: new Date("May 27 2017").getTime(), y: 1361 },
+    { x: new Date("May 28 2017").getTime(), y: 223 },
+    { x: new Date("May 29 2017").getTime(), y: 810 },
+    { x: new Date("May 30 2017").getTime(), y: 777 },
+    { x: new Date("May 17 2017").getTime(), y: 213 },
+    { x: new Date("May 16 2017").getTime(), y: 416 },
+    { x: new Date("May 18 2017").getTime(), y: 264 },
+    { x: new Date("May 13 2017").getTime(), y: 386 }
+  ];
+
   return (
     <Container>
       <div style={{ paddingTop: "20px" }}>
@@ -74,11 +88,13 @@ const CommitsPage: React.FC<IProps> = props => {
               xAxisLabel={"Date"}
               yAxisLabel={"Commits"}
             />
-            <NumberVsTimeLineGraph
-              title={"Additions per Day"}
-              data={lineDataAddition}
+            <NumberVsTimeMultiLineGraph
+              title={"Additions and Deletions per Day"}
+              data={[lineDataAddition, lineDataDeletion]}
               xAxisLabel={"Date"}
-              yAxisLabel={"Additions"}
+              yAxisLabel={"Lines"}
+              lineLabels={["Additions", "Deletions"]}
+              legend={true}
             />
           </Col>
           <Col>
