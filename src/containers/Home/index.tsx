@@ -32,6 +32,7 @@ const Home: React.FC<Props> = props => {
     setCurrentRepo,
     isLoggedIn
   } = props;
+
   const onClick = (repository: IRepository) => {
     setCurrentRepo(repository);
     history.push("/repo");

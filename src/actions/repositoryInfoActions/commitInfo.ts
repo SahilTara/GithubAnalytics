@@ -3,6 +3,7 @@ import GithubApiService from "../../services/GithubApiService";
 import RepositoryInfoActionType from "./repositoryInfoActionTypes";
 import { Dispatch } from "redux";
 import IRepository from "../../types/IRespository";
+import { setCommitsLoadingStatusAction } from "./isCommitsLoading";
 
 export interface IGetCommitInfoActionType {
   type: REPOSITORY_INFO_TYPE_KEYS.GET_COMMIT_INFO;
@@ -14,6 +15,7 @@ export const getCommitInfoAction = (repository: IRepository) => {
     const api = new GithubApiService();
     try {
       dispatch(getCommitInfoSuccess(await api.getCommits(repository)));
+      dispatch(setCommitsLoadingStatusAction(false));
     } catch (error) {
       // handle here if have time
       console.error(error);
