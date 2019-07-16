@@ -89,10 +89,11 @@ const CommitsPage: React.FC<IProps> = props => {
               yAxisLabel={"Commits"} />
             <NumberVsTimeMultiLineGraph
               title={"Additions and Deletions per Day"} 
-              data={[lineDataDeletion, lineDataAddition]} 
+              data={[lineDataAddition, lineDataDeletion]} 
               xAxisLabel={"Date"} 
               yAxisLabel={"Lines"} 
-              lineLabels={["Deletions", "Additions"]}/>
+              lineLabels={["Additions", "Deletions"]}
+              legend={true}/>
           </Col>
           <Col>
             <DonutGraphWithLeaderboard 

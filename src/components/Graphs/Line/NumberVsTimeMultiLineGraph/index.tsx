@@ -23,9 +23,10 @@ interface IProps {
   lineLabels: string[];
   xAxisLabel: string;
   yAxisLabel: string;
+  legend?: boolean;
 }
 
-const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, xAxisLabel, yAxisLabel}) => {
+const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, xAxisLabel, yAxisLabel, legend}) => {
   let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
@@ -57,7 +58,9 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
     return minX + xInterval*i;
   });
 
-  let mouseOver = (datapoint: MarkSeriesPoint)=>{
+  let mouseOver = (datapoint: MarkSeriesPoint, event: any)=>{
+    console.log(datapoint);
+    console.log(event);
     setState({value: true});
     setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
   }
@@ -76,6 +79,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
   return (
     <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
       <h2 style={{paddingTop: "20px"}}>{title}</h2>
+      {legend? (<DiscreteColorLegend orientation="horizontal" items={lineLabels} />): null}
         <FlexibleWidthXYPlot
           xDomain={[minX, maxX]}
           yDomain={[0, yTicks[4]]}
@@ -109,12 +113,11 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
         {theData.map( (subData: MarkSeriesPoint[]) => {
           return (
             <LineMarkSeries data={subData} 
-              onValueMouseOver={ datapoint => mouseOver(datapoint)}
+              onValueMouseOver={ (datapoint, event) => mouseOver(datapoint, event)}
             />
           )
         })}
       </FlexibleWidthXYPlot>
-      <DiscreteColorLegend height={200} width={100} items={lineLabels} />
 
       {state.value? 
         (<div style={{height: "4rem"}}>
