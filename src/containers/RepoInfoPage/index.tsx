@@ -18,6 +18,7 @@ import { setCommitsLoadingStatusAction } from "../../actions/repositoryInfoActio
 import { setIssuesLoadingStatusAction } from "../../actions/repositoryInfoActions/isIssuesLoading";
 import styles from "./styles.module.css";
 import classNames from "classnames";
+import CommitsPage from "../CommitsPage";
 let Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
@@ -91,7 +92,6 @@ const RepoInfoPage: React.FC<Props> = props => {
   const doneLoading = !isPrsLoading && !isCommitsLoading && !isIssuesLoading;
 
   useEffect(() => {
-    console.log({ isPrsLoading, isCommitsLoading, isIssuesLoading });
     if (doneLoading) {
       const now = new Date();
       let numberOfIssuesOpened = 0;
@@ -180,6 +180,23 @@ const RepoInfoPage: React.FC<Props> = props => {
             issuesClosed={issuesClosed}
             prsOpened={prsOpened}
             prsMerged={prsMerged}
+            commitsMade={commitsMade}
+            linesAdded={linesAdded}
+            linesDeleted={linesDeleted}
+          />
+        )) || (
+          <Container>
+            <div className={classNames(styles.vert_centre)}>
+              <Spinner name="ball-scale-multiple" />
+            </div>
+          </Container>
+        )}
+      </Tab>
+
+      <Tab eventKey="commits" title="Commits">
+        {(doneLoading && (
+          <CommitsPage
+            commits={commits}
             commitsMade={commitsMade}
             linesAdded={linesAdded}
             linesDeleted={linesDeleted}
