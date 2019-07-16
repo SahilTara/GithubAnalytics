@@ -1,49 +1,56 @@
 import React, { useState } from 'react';
 import {
-  XYPlot,
+  FlexibleWidthXYPlot,
   XAxis,
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  VerticalBarSeries,
   ChartLabel,
-  VerticalBarSeriesPoint,
-  FlexibleWidthXYPlot
+  MarkSeriesPoint,
+  LineMarkSeries,
+  DiscreteColorLegend
 } from 'react-vis';
 import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
-import classNames from 'classnames';
-import styles from "./styles.module.css";
 import { Card } from 'react-bootstrap';
+import "./style.css";
 
 // takes in a title, a category, a list of {x, y, style?}, 
 // and a maximum results to display (remaining are added to Other)
 // x is time in ms
 interface IProps {
   title: string;
-  data: IBarGraphData[];
+  data: IBarGraphData[][];
+  lineLabels: string[];
   xAxisLabel: string;
   yAxisLabel: string;
+  legend?: boolean;
 }
 
-const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
+const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, xAxisLabel, yAxisLabel, legend}) => {
   let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
-  
-  data.forEach( (item: {x: number, y: number}) => {
-    if (item.x > maxX) {
-      maxX = item.x;
-    } else if (item.x < minX) {
-      minX = item.x;
-    }
-    if (item.y > maxY) {
-      maxY = item.y;
-    } else if (item.y < minY) {
-      minY = item.y;
-    }
+
+  let theData = JSON.parse(JSON.stringify(data));
+  theData.forEach ( (subdata: IBarGraphData[]) => {
+    subdata.sort((a: IBarGraphData, b: IBarGraphData) => {
+      return a.x - b.x;
+    });
+    subdata.forEach( (item: {x: number, y: number}) => {
+      if (item.x > maxX) {
+        maxX = item.x;
+      } else if (item.x < minX) {
+        minX = item.x;
+      }
+      if (item.y > maxY) {
+        maxY = item.y;
+      } else if (item.y < minY) {
+        minY = item.y;
+      }
+    });
   });
 
-  const yInterval = Math.ceil((maxY * 1.1)/4);
+  const yInterval = Math.ceil((maxY*1.1)/4);
   const yTicks = [0, yInterval, yInterval*2, yInterval*3, yInterval*4];
 
   const xInterval = Math.ceil((maxX-minX)/4);
@@ -51,7 +58,9 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
     return minX + xInterval*i;
   });
 
-  let mouseOver = (datapoint: VerticalBarSeriesPoint)=>{
+  let mouseOver = (datapoint: MarkSeriesPoint, event: any)=>{
+    console.log(datapoint);
+    console.log(event);
     setState({value: true});
     setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
   }
@@ -70,6 +79,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
   return (
     <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
       <h2 style={{paddingTop: "20px"}}>{title}</h2>
+      {legend? (<DiscreteColorLegend orientation="horizontal" items={lineLabels} />): null}
         <FlexibleWidthXYPlot
           xDomain={[minX, maxX]}
           yDomain={[0, yTicks[4]]}
@@ -100,22 +110,25 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
               textAnchor: 'end'
             }}
           />
-
-        <VerticalBarSeries data={data} 
-          style={{stroke: "white"}}
-          onNearestX={ datapoint => mouseOver(datapoint)}
-        />
+        {theData.map( (subData: MarkSeriesPoint[]) => {
+          return (
+            <LineMarkSeries data={subData} 
+              onValueMouseOver={ (datapoint, event) => mouseOver(datapoint, event)}
+            />
+          )
+        })}
       </FlexibleWidthXYPlot>
+
       {state.value? 
-        (<div className={classNames(styles.tooltip_box)}>
+        (<div style={{height: "4rem"}}>
             {tooltip}
           </div>) : 
-        <div className={classNames(styles.tooltip_box)}>
-          Hover over a bar for more information.
+        <div style={{height: "4rem"}}>
+          Hover over a data point for more information.
         </div>
       }
     </Card>
   );
 }
 
-export default NumberVsTimeBarGraph;
+export default NumberVsTimeMultiLineGraph;

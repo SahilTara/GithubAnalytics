@@ -60,24 +60,23 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
               labelsRadiusMultiplier={1.45}
               labelsStyle={{fontSize: 16, fill: '#222'}}
               showLabels
-              innerRadius={window.innerWidth / 30}
-              radius={window.innerWidth / 18}
-              width={window.innerWidth / 5}
-              height={window.innerWidth / 5}
+              innerRadius={60}
+              radius={100}
+              width={400}
+              height={400}
               padAngle={0.05}
               onValueMouseOver={(datapoint) => mouseOver(datapoint)}
-              // onValueMouseOut={() => setState({value: false})}
-            > 
-          </RadialChart>
-          {state.value? 
-            <div className={classNames(styles.tooltip_box)}>
-              {"User: " + tooltip.User}
-            </div> : 
-            <div className={classNames(styles.tooltip_box)}>
-              Hover over a donut slice for more information.
-            </div>
-          }
+            >
+          </RadialChart> 
         </div>
+        {state.value? 
+          <div className={classNames(styles.tooltip_box)}>
+            {"User: " + tooltip.User}
+          </div> : 
+          <div className={classNames(styles.tooltip_box)}>
+            Hover over a donut slice for more information.
+          </div>
+        }
         <div className={classNames(styles.leaderboard)}>
           <Row>
             <Col>Position</Col>

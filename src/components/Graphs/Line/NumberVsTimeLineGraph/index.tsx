@@ -7,7 +7,8 @@ import {
   HorizontalGridLines,
   ChartLabel,
   MarkSeriesPoint,
-  LineMarkSeries
+  LineMarkSeries,
+  FlexibleWidthXYPlot
 } from 'react-vis';
 import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
 import classNames from 'classnames';
@@ -48,7 +49,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxis
     }
   });
 
-  const yInterval = Math.ceil(maxY/4);
+  const yInterval = Math.ceil((maxY * 1.1)/4);
   const yTicks = [0, yInterval, yInterval*2, yInterval*3, yInterval*4];
 
   const xInterval = Math.ceil((maxX-minX)/4);
@@ -75,12 +76,11 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxis
   return (
     <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
       <h2 style={{paddingTop: "20px"}}>{title}</h2>
-        <XYPlot
+        <FlexibleWidthXYPlot
           xDomain={[minX, maxX]}
           yDomain={[0, yTicks[4]]}
           xType="time"
-          width={window.innerWidth / 4}
-          height={window.innerWidth / 6}
+          height={300}
           margin={{left: 80, right: 50, bottom: 80}}
         >
           <VerticalGridLines />
@@ -91,7 +91,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxis
             className="alt-x-label"
             includeMargin={true}
             xPercent={0.48}
-            yPercent={0.72}
+            yPercent={0.64}
           />
           
           <YAxis tickValues={yTicks} />
@@ -99,7 +99,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxis
             text={yAxisLabel}
             className="alt-y-label"
             includeMargin={true}
-            xPercent={0.05}
+            xPercent={0.04}
             yPercent={0.06}
             style={{
               transform: 'rotate(-90)',
@@ -110,7 +110,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxis
         <LineMarkSeries data={theData} 
           onNearestX={ datapoint => mouseOver(datapoint)}
         />
-      </XYPlot>
+      </FlexibleWidthXYPlot>
       {state.value? 
         (<div className={classNames(styles.tooltip_box)}>
             {tooltip}
