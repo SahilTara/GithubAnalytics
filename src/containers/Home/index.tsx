@@ -10,10 +10,12 @@ import RootAction from "../../actions";
 import HorizontalScroller from "../../components/HorizontalScroller";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { setCurrentRepositoryAction } from "../../actions/repositoryInfoActions/setCurrentRepository";
+import LoginPage from "../LoginPage";
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
   popularRepos: IRepository[];
+  isLoggedIn: boolean;
 }
 
 interface IDispatchProps {
@@ -23,32 +25,44 @@ interface IDispatchProps {
 
 type Props = IStateProps & IDispatchProps & IProps;
 const Home: React.FC<Props> = props => {
-  const { popularRepos, getPopularRepos, history, setCurrentRepo } = props;
+  const {
+    popularRepos,
+    getPopularRepos,
+    history,
+    setCurrentRepo,
+    isLoggedIn
+  } = props;
   const onClick = (repository: IRepository) => {
     setCurrentRepo(repository);
     history.push("/repo");
   };
+  console.log(isLoggedIn);
   useEffect(() => {
-    console.log("TEST");
-    getPopularRepos();
-  }, []);
+    if (isLoggedIn) {
+      getPopularRepos();
+    }
+  }, [isLoggedIn]);
   return (
     <Container>
-      <div>
-        <HorizontalScroller
-          title={"Explore popular repositories"}
-          repos={popularRepos}
-          onClick={onClick}
-        />
-      </div>
+      {(!isLoggedIn && <LoginPage />) || (
+        <div>
+          <HorizontalScroller
+            title={"Explore popular repositories"}
+            repos={popularRepos}
+            onClick={onClick}
+          />
+        </div>
+      )}
     </Container>
   );
 };
 
 const mapStateToProps = (state: AppState): IStateProps => {
   const { popularRepos } = state.dashboardInfo;
+  const { isLoggedIn } = state.environmentInfo;
   return {
-    popularRepos
+    popularRepos,
+    isLoggedIn
   };
 };
 

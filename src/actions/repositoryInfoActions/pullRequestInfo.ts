@@ -19,6 +19,7 @@ export const getPullRequestInfoAction = (repository: IRepository) => {
       );
     } catch (error) {
       // handle here if have time
+      console.error(error);
     }
   };
 };
