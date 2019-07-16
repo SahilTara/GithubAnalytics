@@ -39,12 +39,14 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
     subdata.forEach( (item: {x: number, y: number}) => {
       if (item.x > maxX) {
         maxX = item.x;
-      } else if (item.x < minX) {
+      }
+      if (item.x < minX) {
         minX = item.x;
       }
       if (item.y > maxY) {
         maxY = item.y;
-      } else if (item.y < minY) {
+      }
+      if (item.y < minY) {
         minY = item.y;
       }
     });
