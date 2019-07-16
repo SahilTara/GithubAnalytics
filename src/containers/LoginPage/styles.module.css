@@ -1,7 +1,8 @@
 .vert_centre {
   margin: 0;
   position: absolute;
-  top: 36%;
+  top: 45%;
   left: 0%;
+  transform: translateY(-50%);
   width: 100%;
 }

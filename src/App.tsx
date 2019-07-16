@@ -3,6 +3,7 @@ import "./App.css";
 import Home from "./containers/Home";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import RepoInfoPage from "./containers/RepoInfoPage";
+import CommitsPage from "./containers/CommitsPage";
 
 //new GithubApiService().getUserRepos().then(response => console.log(response));
 const App: React.FC = () => {
@@ -12,6 +13,7 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/repo" component={RepoInfoPage} />
+          <Route path="/commit" component={CommitsPage} />
         </Switch>
       </BrowserRouter>
     </div>
