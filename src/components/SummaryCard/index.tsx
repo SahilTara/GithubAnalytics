@@ -8,7 +8,7 @@ interface IProps {
   subtitle: string;
 }
 
-const SmolCard: React.FC<IProps> = ({count, subtitle}) => {
+const SummaryCard: React.FC<IProps> = ({count, subtitle}) => {
 
   return (
     <div>
@@ -20,4 +20,4 @@ const SmolCard: React.FC<IProps> = ({count, subtitle}) => {
   );
 }
 
-export default SmolCard;
+export default SummaryCard;

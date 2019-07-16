@@ -533,6 +533,21 @@ declare module 'react-vis' {
   }
   export class Crosshair<T = any> extends PureComponent<CrosshairProps & T> {}
 
+  export interface ChartLabelProps {
+    style?: {
+      bottom?: CSSProperties;
+      left?: CSSProperties;
+      right?: CSSProperties;
+      top?: CSSProperties;
+    };
+    className: string;
+    includeMargin: boolean;
+    text: string;
+    xPercent: number;
+    yPercent: number;
+  }
+  export class ChartLabel<T = any> extends PureComponent<ChartLabelProps & T> {}
+
   export interface XYPlotProps {
     animation?: string | {
       stiffness?: number;
@@ -591,7 +606,8 @@ declare module 'react-vis' {
     top?: number;
     left?: number;
     title?: string;
-    style?: CSSProperties;
+    position?: string;
+    style?: CSSProperties | Object;
     className?: string;
     hideTicks?: boolean;
     hideLine?: boolean;
@@ -622,7 +638,8 @@ declare module 'react-vis' {
     top?: number;
     left?: number;
     title?: string;
-    style?: CSSProperties;
+    position?: string;
+    style?:  CSSProperties | Object;
     className?: string;
     hideTicks?: boolean;
     hideLine?: boolean;
@@ -1271,6 +1288,11 @@ declare module 'react-vis/es/plot/borders' {
 declare module 'react-vis/es/plot/crosshair' {
   import { Crosshair } from 'react-vis';
   export default Crosshair;
+}
+
+declare module 'react-vis/es/plot/chart-label' {
+  import { ChartLabel } from 'react-vis';
+  export default ChartLabel;
 }
 
 declare module 'react-vis/es/plot/xy-plot' {

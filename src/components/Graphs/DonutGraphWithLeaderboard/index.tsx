@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Row, Col } from "react-bootstrap";
 import { RadialChart, RadialChartProps, RadialChartPoint, Hint } from 'react-vis';
-import IDonutGraphData from '../../../types/IGraphData';
+import IDonutGraphData from '../../../types/IGraphData/IDonutGraphData';
 import styles from "./styles.module.css";
 import classNames from 'classnames';
 
@@ -70,13 +70,11 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({title, category, data, max
             > 
           </RadialChart>
           {state.value? 
-            (<div className={classNames(styles.tooltip)}>
-              <div className={classNames(styles.tooltip_box)}>
-                {"User: " + tooltip.User}
-              </div>
-            </div>) : 
             <div className={classNames(styles.tooltip_box)}>
-              Hover over a pie slice for more information.
+              {"User: " + tooltip.User}
+            </div> : 
+            <div className={classNames(styles.tooltip_box)}>
+              Hover over a donut slice for more information.
             </div>
           }
         </div>
