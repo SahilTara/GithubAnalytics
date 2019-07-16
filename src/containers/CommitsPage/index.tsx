@@ -1,10 +1,10 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import DonutGraphWithLeaderboard from "../../components/Graphs/DonutGraphWithLeaderboard";
+import DonutGraphWithLeaderboard from "../../components/Graphs/Radial/DonutGraphWithLeaderboard";
 import SummaryCard from "../../components/SummaryCard";
-import NumberVsTimeBarGraph from "../../components/Graphs/NumberVsTimeBarGraph";
-import NumberVsNumberBarGraph from "../../components/Graphs/NumberVsNumberBarGraph";
-import NumberVsTimeLineGraph from "../../components/Graphs/NumberVsTimeLineGraph";
+import NumberVsTimeBarGraph from "../../components/Graphs/Bar/NumberVsTimeBarGraph";
+import NumberVsNumberBarGraph from "../../components/Graphs/Bar/NumberVsNumberBarGraph";
+import NumberVsTimeLineGraph from "../../components/Graphs/Line/NumberVsTimeLineGraph";
 
 interface IProps {
 }

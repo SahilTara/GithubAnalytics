@@ -5,41 +5,49 @@ import {
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  VerticalBarSeries,
   ChartLabel,
-  VerticalBarSeriesPoint
+  MarkSeriesPoint,
+  LineMarkSeries
 } from 'react-vis';
-import IBarGraphData from '../../../types/IGraphData/IBarGraphData';
+import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
 import classNames from 'classnames';
 import styles from "./styles.module.css";
 import { Card } from 'react-bootstrap';
+import "./style.css";
 
 // takes in a title, a category, a list of {x, y, style?}, 
 // and a maximum results to display (remaining are added to Other)
 // x is time in ms
 interface IProps {
   title: string;
-  data: IBarGraphData[];
+  data: IBarGraphData[][];
   xAxisLabel: string;
   yAxisLabel: string;
 }
 
-const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
+const NumberVsTimeLineGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
   let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
+
+  let theData = JSON.parse(JSON.stringify(data));
+  theData.sort((a: IBarGraphData, b: IBarGraphData) => {
+    return a.x - b.x;
+  });
   
-  data.forEach( (item: {x: number, y: number}) => {
-    if (item.x > maxX) {
-      maxX = item.x;
-    } else if (item.x < minX) {
-      minX = item.x;
-    }
-    if (item.y > maxY) {
-      maxY = item.y;
-    } else if (item.y < minY) {
-      minY = item.y;
-    }
+  data.forEach( (subdata: IBarGraphData[]) => {
+    subdata.forEach( (item: {x: number, y: number}) => {
+      if (item.x > maxX) {
+        maxX = item.x;
+      } else if (item.x < minX) {
+        minX = item.x;
+      }
+      if (item.y > maxY) {
+        maxY = item.y;
+      } else if (item.y < minY) {
+        minY = item.y;
+      }
+    });
   });
 
   const yInterval = Math.ceil(maxY/4);
@@ -50,7 +58,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
     return minX + xInterval*i;
   });
 
-  let mouseOver = (datapoint: VerticalBarSeriesPoint)=>{
+  let mouseOver = (datapoint: MarkSeriesPoint)=>{
     setState({value: true});
     setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
   }
@@ -100,22 +108,26 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisL
               textAnchor: 'end'
             }}
           />
+        {data.map( (theData: MarkSeriesPoint[]) => {
+          return (
+            <LineMarkSeries data={theData} 
+              onValueMouseOver={ datapoint => mouseOver(datapoint)}
+            />
+          )
+        })}
 
-        <VerticalBarSeries data={data} 
-          style={{stroke: "white"}}
-          onNearestX={ datapoint => mouseOver(datapoint)}
-        />
+        
       </XYPlot>
       {state.value? 
         (<div className={classNames(styles.tooltip_box)}>
             {tooltip}
           </div>) : 
         <div className={classNames(styles.tooltip_box)}>
-          Hover over a bar for more information.
+          Hover over a data point for more information.
         </div>
       }
     </Card>
   );
 }
 
-export default NumberVsTimeBarGraph;
+export default NumberVsTimeLineGraph;

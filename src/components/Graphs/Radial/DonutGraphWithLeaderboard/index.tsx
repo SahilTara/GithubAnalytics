@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Row, Col } from "react-bootstrap";
 import { RadialChart, RadialChartProps, RadialChartPoint, Hint } from 'react-vis';
-import IDonutGraphData from '../../../types/IGraphData/IDonutGraphData';
+import IDonutGraphData from '../../../../types/IGraphData/IDonutGraphData';
 import styles from "./styles.module.css";
 import classNames from 'classnames';
 

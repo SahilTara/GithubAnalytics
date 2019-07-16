@@ -9,13 +9,14 @@ import {
   ChartLabel,
   VerticalBarSeriesPoint
 } from 'react-vis';
-import IBarGraphData from '../../../types/IGraphData/IBarGraphData';
+import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
 import classNames from 'classnames';
 import styles from "./styles.module.css";
 import { Card } from 'react-bootstrap';
 
 // takes in a title, a category, a list of {x, y, style?}, 
 // and a maximum results to display (remaining are added to Other)
+// x is time in ms
 interface IProps {
   title: string;
   data: IBarGraphData[];
@@ -23,14 +24,16 @@ interface IProps {
   yAxisLabel: string;
 }
 
-const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
-  let maxX = 0, minX = 0, maxY = 0, minY = +Infinity;
+const NumberVsTimeBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxisLabel}) => {
+  let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
   const [state, setState] = useState({value: false});
   const [tooltip, setTooltip] = useState({});
   
   data.forEach( (item: {x: number, y: number}) => {
     if (item.x > maxX) {
       maxX = item.x;
+    } else if (item.x < minX) {
+      minX = item.x;
     }
     if (item.y > maxY) {
       maxY = item.y;
@@ -42,28 +45,41 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
   const yInterval = Math.ceil(maxY/4);
   const yTicks = [0, yInterval, yInterval*2, yInterval*3, yInterval*4];
 
-  const xInterval = Math.ceil(maxX/4);
-  const xTicks = [minX, xInterval, xInterval*2, xInterval*3, xInterval*4];
+  const xInterval = Math.ceil((maxX-minX)/4);
+  const xTicks = Array.from({length: 5}, (x, i) => {
+    return minX + xInterval*i;
+  });
 
   let mouseOver = (datapoint: VerticalBarSeriesPoint)=>{
     setState({value: true});
-    setTooltip(xAxisLabel + ": " + datapoint.x + " • " + yAxisLabel + ": " + datapoint.y);
+    setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
+  }
+
+  let dateTickFormater = (dateMs: number) => {
+    let date = new Date(dateMs).toDateString().split(" ");
+    let dateTick: string;
+    if (maxX - minX < 15552000000) {
+      dateTick = date[1] + " " + date[2];
+    } else {
+      dateTick = date[2] + " " + date[3];
+    }
+    return dateTick;
   }
 
   return (
     <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
       <h2 style={{paddingTop: "20px"}}>{title}</h2>
         <XYPlot
-          xDomain={[minX, xTicks[4]]}
+          xDomain={[minX, maxX]}
           yDomain={[0, yTicks[4]]}
+          xType="time"
           width={window.innerWidth / 4}
           height={window.innerWidth / 6}
           margin={{left: 80, right: 50, bottom: 80}}
         >
           <VerticalGridLines />
           <HorizontalGridLines />
-
-          <XAxis tickValues={xTicks} />
+          <XAxis tickValues={xTicks} tickFormat={value => dateTickFormater(value)}/>
           <ChartLabel
             text={xAxisLabel}
             className="alt-x-label"
@@ -87,7 +103,7 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
 
         <VerticalBarSeries data={data} 
           style={{stroke: "white"}}
-          onValueMouseOver={ datapoint => mouseOver(datapoint) }
+          onNearestX={ datapoint => mouseOver(datapoint)}
         />
       </XYPlot>
       {state.value? 
@@ -102,4 +118,4 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({title, data, xAxisLabel, yAxi
   );
 }
 
-export default NumberVsNumberBarGraph;
+export default NumberVsTimeBarGraph;
