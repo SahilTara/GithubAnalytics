@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import RootAction from "../../actions";
 import { getPullRequestInfoAction } from "../../actions/repositoryInfoActions/pullRequestInfo";
+import { getIssueInfoAction } from "../../actions/repositoryInfoActions/issueInfo";
+import { getCommitInfoAction } from "../../actions/repositoryInfoActions/commitInfo";
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
@@ -14,23 +16,28 @@ interface IStateProps {
 }
 interface IDispatchProps {
   getPullRequests: (repository: IRepository) => any;
+  getIssues: (repository: IRepository) => any;
+  getCommits: (repository: IRepository) => any;
 }
 
 type Props = IStateProps & IProps & IDispatchProps;
 
 const RepoInfoPage: React.FC<Props> = props => {
-  const { history, repo, getPullRequests } = props;
+  const { history, repo, getPullRequests, getIssues, getCommits } = props;
   const { name, author } = repo;
 
-  useEffect(() => {
-    if (repo) {
-      getPullRequests(repo);
-    }
-  }, [repo]);
   // Repo wasn't filled before reaching.
   if (name === "") {
     history.push("/");
   }
+
+  useEffect(() => {
+    if (repo.name) {
+      getPullRequests(repo);
+      getIssues(repo);
+      getCommits(repo);
+    }
+  }, [repo.name]);
 
   return (
     <Tabs defaultActiveKey="overview" id="repo-tabs">
@@ -53,6 +60,12 @@ const mapDispatchToProps = (
 ): IDispatchProps => ({
   getPullRequests: (repository: IRepository) => {
     dispatch(getPullRequestInfoAction(repository));
+  },
+  getIssues: (repository: IRepository) => {
+    dispatch(getIssueInfoAction(repository));
+  },
+  getCommits: (repository: IRepository) => {
+    dispatch(getCommitInfoAction(repository));
   }
 });
 
