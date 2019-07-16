@@ -6,6 +6,8 @@ import { setIsLoggedInAction } from "../../actions/environmentInfoActions/setLog
 import { connect } from "react-redux";
 import { Row, Col, Button } from "react-bootstrap";
 import Octicon, { MarkGithub } from "@primer/octicons-react";
+import classNames from "classnames";
+import styles from "./styles.module.css";
 
 interface IProps extends RouteComponentProps {}
 
@@ -35,7 +37,7 @@ const LoginPage: React.FC<Props> = props => {
     }
   }, []);
   return (
-    <div>
+    <div className={classNames(styles.vert_centre)}>
       <Row>
         <Col>
           <h1>Github Analytics</h1>
