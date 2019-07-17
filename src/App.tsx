@@ -14,8 +14,6 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/repo" component={RepoInfoPage} />
-          <Route path="/commit" component={CommitsPage} />
-          <Route path="/compare" component={ComparePage} />
         </Switch>
       </BrowserRouter>
     </div>

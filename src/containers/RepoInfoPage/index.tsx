@@ -18,6 +18,8 @@ import { setCommitsLoadingStatusAction } from "../../actions/repositoryInfoActio
 import { setIssuesLoadingStatusAction } from "../../actions/repositoryInfoActions/isIssuesLoading";
 import styles from "./styles.module.css";
 import classNames from "classnames";
+import CommitsPage from "../CommitsPage";
+import { ICommitData } from "../../types/ICommitData";
 let Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
@@ -91,7 +93,6 @@ const RepoInfoPage: React.FC<Props> = props => {
   const doneLoading = !isPrsLoading && !isCommitsLoading && !isIssuesLoading;
 
   useEffect(() => {
-    console.log({ isPrsLoading, isCommitsLoading, isIssuesLoading });
     if (doneLoading) {
       const now = new Date();
       let numberOfIssuesOpened = 0;
@@ -169,12 +170,25 @@ const RepoInfoPage: React.FC<Props> = props => {
     }
   }, [timeSpan, isPrsLoading, isCommitsLoading, isIssuesLoading]);
 
+  const withLoading = (element: JSX.Element, isDoneLoading: boolean) => (
+    <>
+      {(!isDoneLoading && (
+        <Container>
+          <div className={classNames(styles.vert_centre)}>
+            <Spinner name="ball-scale-multiple" />
+          </div>
+        </Container>
+      )) ||
+        element}
+    </>
+  );
+
   return (
     <Tabs defaultActiveKey="overview" id="repo-tabs">
       <Tab eventKey="repo" title={`${author}/${name}`} disabled />
 
       <Tab eventKey="overview" title="Overview">
-        {(doneLoading && (
+        {withLoading(
           <OverviewPage
             issuesOpened={issuesOpened}
             issuesClosed={issuesClosed}
@@ -183,13 +197,20 @@ const RepoInfoPage: React.FC<Props> = props => {
             commitsMade={commitsMade}
             linesAdded={linesAdded}
             linesDeleted={linesDeleted}
-          />
-        )) || (
-          <Container>
-            <div className={classNames(styles.vert_centre)}>
-              <Spinner name="ball-scale-multiple" />
-            </div>
-          </Container>
+          />,
+          doneLoading
+        )}
+      </Tab>
+
+      <Tab eventKey="commits" title="Commits">
+        {withLoading(
+          <CommitsPage
+            commits={commits}
+            commitsMade={commitsMade}
+            linesAdded={linesAdded}
+            linesDeleted={linesDeleted}
+          />,
+          doneLoading
         )}
       </Tab>
     </Tabs>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  FlexibleWidthXYPlot,
+  XYPlot,
   XAxis,
   YAxis,
   VerticalGridLines,
@@ -9,12 +9,12 @@ import {
   MarkSeriesPoint,
   LineMarkSeries,
   DiscreteColorLegend
-} from 'react-vis';
-import IBarGraphData from '../../../../types/IGraphData/IBarGraphData';
-import { Card } from 'react-bootstrap';
+} from "react-vis";
+import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
+import { Card } from "react-bootstrap";
 import "./style.css";
 
-// takes in a title, a category, a list of {x, y, style?}, 
+// takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
 // x is time in ms
 interface IProps {
@@ -26,17 +26,27 @@ interface IProps {
   legend?: boolean;
 }
 
-const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, xAxisLabel, yAxisLabel, legend}) => {
-  let maxX = 0, minX = +Infinity, maxY = 0, minY = +Infinity;
-  const [state, setState] = useState({value: false});
+const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
+  title,
+  data,
+  lineLabels,
+  xAxisLabel,
+  yAxisLabel,
+  legend
+}) => {
+  let maxX = 0,
+    minX = +Infinity,
+    maxY = 0,
+    minY = +Infinity;
+  const [state, setState] = useState({ value: false });
   const [tooltip, setTooltip] = useState({});
 
   let theData = JSON.parse(JSON.stringify(data));
-  theData.forEach ( (subdata: IBarGraphData[]) => {
+  theData.forEach((subdata: IBarGraphData[]) => {
     subdata.sort((a: IBarGraphData, b: IBarGraphData) => {
       return a.x - b.x;
     });
-    subdata.forEach( (item: {x: number, y: number}) => {
+    subdata.forEach((item: { x: number; y: number }) => {
       if (item.x > maxX) {
         maxX = item.x;
       }
@@ -52,20 +62,27 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
     });
   });
 
-  const yInterval = Math.ceil((maxY*1.1)/4);
-  const yTicks = [0, yInterval, yInterval*2, yInterval*3, yInterval*4];
+  const yInterval = Math.ceil((maxY * 1.1) / 4);
+  const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
 
-  const xInterval = Math.ceil((maxX-minX)/4);
-  const xTicks = Array.from({length: 5}, (x, i) => {
-    return minX + xInterval*i;
+  const xInterval = Math.ceil((maxX - minX) / 4);
+  const xTicks = Array.from({ length: 5 }, (x, i) => {
+    return minX + xInterval * i;
   });
 
-  let mouseOver = (datapoint: MarkSeriesPoint, event: any)=>{
+  let mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
     console.log(datapoint);
     console.log(event);
-    setState({value: true});
-    setTooltip("Date: " + new Date(datapoint.x).toDateString() + " • " + yAxisLabel + ": " + datapoint.y);
-  }
+    setState({ value: true });
+    setTooltip(
+      "Date: " +
+        new Date(datapoint.x).toDateString() +
+        " • " +
+        yAxisLabel +
+        ": " +
+        datapoint.y
+    );
+  };
 
   let dateTickFormater = (dateMs: number) => {
     let date = new Date(dateMs).toDateString().split(" ");
@@ -76,61 +93,69 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({title, data, lineLabels, 
       dateTick = date[2] + " " + date[3];
     }
     return dateTick;
-  }
+  };
 
   return (
-    <Card style={{marginRight: "-10px", marginBottom: "20px"}}>
-      <h2 style={{paddingTop: "20px"}}>{title}</h2>
-      {legend? (<DiscreteColorLegend orientation="horizontal" items={lineLabels} />): null}
-        <FlexibleWidthXYPlot
-          xDomain={[minX, maxX]}
-          yDomain={[0, yTicks[4]]}
-          xType="time"
-          height={300}
-          margin={{left: 80, right: 50, bottom: 80}}
-        >
-          <VerticalGridLines />
-          <HorizontalGridLines />
-          <XAxis tickValues={xTicks} tickFormat={value => dateTickFormater(value)}/>
-          <ChartLabel
-            text={xAxisLabel}
-            className="alt-x-label"
-            includeMargin={true}
-            xPercent={0.48}
-            yPercent={0.64}
-          />
-          
-          <YAxis tickValues={yTicks} />
-          <ChartLabel
-            text={yAxisLabel}
-            className="alt-y-label"
-            includeMargin={true}
-            xPercent={0.04}
-            yPercent={0.06}
-            style={{
-              transform: 'rotate(-90)',
-              textAnchor: 'end'
-            }}
-          />
-        {theData.map( (subData: MarkSeriesPoint[]) => {
-          return (
-            <LineMarkSeries data={subData} 
-              onValueMouseOver={ (datapoint, event) => mouseOver(datapoint, event)}
-            />
-          )
-        })}
-      </FlexibleWidthXYPlot>
+    <Card style={{ marginRight: "-10px", marginBottom: "20px" }}>
+      <h2 style={{ paddingTop: "20px" }}>{title}</h2>
+      {legend ? (
+        <DiscreteColorLegend orientation="horizontal" items={lineLabels} />
+      ) : null}
+      <XYPlot
+        xDomain={[minX, maxX]}
+        yDomain={[0, yTicks[4]]}
+        xType="time"
+        height={300}
+        width={500}
+        margin={{ left: 80, right: 50, bottom: 80 }}
+      >
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis
+          tickValues={xTicks}
+          tickFormat={value => dateTickFormater(value)}
+        />
+        <ChartLabel
+          text={xAxisLabel}
+          className="alt-x-label"
+          includeMargin={true}
+          xPercent={0.48}
+          yPercent={0.64}
+        />
 
-      {state.value? 
-        (<div style={{height: "4rem"}}>
-            {tooltip}
-          </div>) : 
-        <div style={{height: "4rem"}}>
+        <YAxis tickValues={yTicks} />
+        <ChartLabel
+          text={yAxisLabel}
+          className="alt-y-label"
+          includeMargin={true}
+          xPercent={0.04}
+          yPercent={0.06}
+          style={{
+            transform: "rotate(-90)",
+            textAnchor: "end"
+          }}
+        />
+        {theData.map((subData: MarkSeriesPoint[]) => {
+          return (
+            <LineMarkSeries
+              data={subData}
+              onValueMouseOver={(datapoint, event) =>
+                mouseOver(datapoint, event)
+              }
+            />
+          );
+        })}
+      </XYPlot>
+
+      {state.value ? (
+        <div style={{ height: "4rem" }}>{tooltip}</div>
+      ) : (
+        <div style={{ height: "4rem" }}>
           Hover over a data point for more information.
         </div>
-      }
+      )}
     </Card>
   );
-}
+};
 
 export default NumberVsTimeMultiLineGraph;
