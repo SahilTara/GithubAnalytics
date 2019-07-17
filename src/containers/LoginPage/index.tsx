@@ -18,7 +18,7 @@ interface IDispatchProps {
 type Props = IProps & IDispatchProps;
 
 const LoginPage: React.FC<Props> = props => {
-  const { location, setLoggedIn } = props;
+  const { location, history, setLoggedIn } = props;
 
   // Hacky auth
   useEffect(() => {
@@ -29,6 +29,7 @@ const LoginPage: React.FC<Props> = props => {
         .then(response => response.json())
         .then(({ token }) => {
           GithubApiService.setToken(token);
+          history.push("/");
           setLoggedIn();
         })
         .catch(error => {

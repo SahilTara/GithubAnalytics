@@ -1,4 +1,4 @@
-interface ICommitData {
+export interface ICommitData {
   author: string;
   createdAt: string;
   additions: number;

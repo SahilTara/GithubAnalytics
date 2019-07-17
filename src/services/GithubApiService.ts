@@ -9,6 +9,7 @@ import OctoKit, {
 import IRepository from "../types/IRespository";
 import { IPullRequest } from "../types/IPullRequest";
 import { IIssueData } from "../types/IIssueData";
+import { ICommitData } from "../types/ICommitData";
 
 OctoKit.plugin(require("@octokit/plugin-throttling"));
 
@@ -190,7 +191,7 @@ class GithubApiService {
   }
   public async getUserRepos() {
     return await GithubApiService.octokit.repos
-      .list()
+      .list({ per_page: 100 })
       .then(response => Promise.resolve(response.data as ReposGetResponse[]))
       .then(repositories =>
         repositories.map<IRepository>(repositoryGithubType => {
