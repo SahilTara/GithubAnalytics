@@ -4,6 +4,7 @@ import RepositoryInfoActionType from "./repositoryInfoActionTypes";
 import { Dispatch } from "redux";
 import IRepository from "../../types/IRespository";
 import { setCommitsLoadingStatusAction } from "./isCommitsLoading";
+import { ICommitData } from "../../types/ICommitData";
 
 export interface IGetCommitInfoActionType {
   type: REPOSITORY_INFO_TYPE_KEYS.GET_COMMIT_INFO;

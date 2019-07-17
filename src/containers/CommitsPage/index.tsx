@@ -11,6 +11,8 @@ import { AppState } from "../../reducers";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
+import { ICommitData } from "../../types/ICommitData";
+import SelectableItems from "../../components/SelectableItems";
 
 interface IProps {
   commitsMade: number;
@@ -128,7 +130,20 @@ const getAdditionsAndDeletionsData = (
 };
 
 const CommitsPage: React.FC<Props> = props => {
-  const { commits, commitsMade, linesAdded, linesDeleted, timeSpan } = props;
+  const {
+    commits,
+    commitsMade,
+    linesAdded,
+    linesDeleted,
+    timeSpan,
+    setTimeSpan
+  } = props;
+
+  const timeSpans = [
+    TIME_SPAN.LAST_7_DAYS,
+    TIME_SPAN.LAST_MONTH,
+    TIME_SPAN.LAST_YEAR
+  ];
 
   const [commitLeaderboard, setCommitLeaderBoard] = useState(
     commitLeaderboardInitial
@@ -140,6 +155,10 @@ const CommitsPage: React.FC<Props> = props => {
   const [additionsAndDeletions, setAdditionsAndDeletions] = useState(
     additionsAndDeletionsInitial
   );
+
+  const selectTimeSpan = (key: string) => {
+    setTimeSpan(key as TIME_SPAN);
+  };
 
   useEffect(() => {
     const now = new Date();
@@ -178,8 +197,16 @@ const CommitsPage: React.FC<Props> = props => {
   return (
     <Container className="show-grid">
       <div style={{ paddingTop: "20px" }}>
-        <Row>
-          <Col />
+        <Row style={{ paddingBottom: "20px" }}>
+          <Col md={{ span: 2, offset: 10 }}>
+            <SelectableItems
+              options={timeSpans}
+              placeholder={timeSpan}
+              className=""
+              id="time-span"
+              onChangeHook={selectTimeSpan}
+            />
+          </Col>
         </Row>
         <Row>
           <Col>
