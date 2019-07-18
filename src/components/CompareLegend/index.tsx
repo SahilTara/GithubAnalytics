@@ -21,8 +21,11 @@ const CompareLegend: React.FC<IProps> = ({
   const [total, setTotal] = useState(true);
 
   const clickHandler = (item: any) => {
-    item.disabled = !item.disabled;
-    itemCallBack(item);
+    const tempItem = state.find(value => value.title === item.key);
+    if (tempItem) {
+      tempItem.disabled = !tempItem.disabled;
+      itemCallBack(tempItem);
+    }
   };
 
   const searchChangeHandler = (text: string) => {
