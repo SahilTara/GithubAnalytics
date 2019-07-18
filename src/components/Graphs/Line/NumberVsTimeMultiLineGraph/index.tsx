@@ -57,17 +57,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     subdata.sort((a: IBarGraphData, b: IBarGraphData) => {
       return a.x - b.x;
     });
-<<<<<<< HEAD
-    subdata.forEach((item: { x: number; y: number }) => {
-      if (item.x > maxX) {
-        maxX = item.x;
-      }
-      if (item.x < minX) {
-        minX = item.x;
-      }
-=======
     subdata.forEach((item: { y: number }) => {
->>>>>>> 4fe2af41e9b0362d63dd5eabb3a28bd7189227d1
       if (item.y > maxY) {
         maxY = item.y;
       }
@@ -83,11 +73,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   const startDateAsTime = startDate.getTime();
   const todayAsTime = today.getTime();
 
-<<<<<<< HEAD
-  let mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
-=======
   const mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
->>>>>>> 4fe2af41e9b0362d63dd5eabb3a28bd7189227d1
     setState({ value: true });
     setTooltip(
       "Date: " +
