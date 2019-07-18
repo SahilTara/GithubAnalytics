@@ -24,6 +24,7 @@ interface IProps {
   xAxisLabel: string;
   yAxisLabel: string;
   legend?: boolean;
+  width?: number;
 }
 
 const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
@@ -32,7 +33,8 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   lineLabels,
   xAxisLabel,
   yAxisLabel,
-  legend
+  legend,
+  width
 }) => {
   let maxX = 0,
     minX = +Infinity,
@@ -71,8 +73,6 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   });
 
   let mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
-    console.log(datapoint);
-    console.log(event);
     setState({ value: true });
     setTooltip(
       "Date: " +
@@ -106,7 +106,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         yDomain={[0, yTicks[4]]}
         xType="time"
         height={300}
-        width={500}
+        width={width ? width : 500}
         margin={{ left: 80, right: 50, bottom: 80 }}
       >
         <VerticalGridLines />

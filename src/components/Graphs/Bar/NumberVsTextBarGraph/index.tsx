@@ -7,12 +7,11 @@ import {
   HorizontalGridLines,
   VerticalBarSeries,
   ChartLabel,
-  VerticalBarSeriesPoint,
-  FlexibleWidthXYPlot
+  VerticalBarSeriesPoint
 } from "react-vis";
 import ITextBarGraphData from "../../../../types/IGraphData/ITextBarGraphData";
 import classNames from "classnames";
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 
 // takes in a title, a category, a list of {x, y, style?},
@@ -22,13 +21,15 @@ interface IProps {
   data: ITextBarGraphData[];
   xAxisLabel: string;
   yAxisLabel: string;
+  width?: number;
 }
 
 const NumberVsTextBarGraph: React.FC<IProps> = ({
   title,
   data,
   xAxisLabel,
-  yAxisLabel
+  yAxisLabel,
+  width
 }) => {
   let maxY = 0,
     minY = +Infinity;
@@ -61,7 +62,7 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
       <h2 style={{ paddingTop: "20px" }}>{title}</h2>
       <XYPlot
         yDomain={[0, yTicks[4]]}
-        width={300}
+        width={width ? width : 300}
         height={300}
         margin={{ left: 80, right: 50, bottom: 80 }}
         xType="ordinal"
@@ -106,7 +107,6 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
 
         <VerticalBarSeries
           data={data}
-          style={{ stroke: "white" }}
           onValueMouseOver={datapoint => mouseOver(datapoint)}
         />
       </XYPlot>

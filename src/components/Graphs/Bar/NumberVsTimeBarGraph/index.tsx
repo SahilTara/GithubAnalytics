@@ -12,7 +12,7 @@ import {
 } from "react-vis";
 import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
 import classNames from "classnames";
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 
 // takes in a title, a category, a list of {x, y, style?},
@@ -122,7 +122,6 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({
 
         <VerticalBarSeries
           data={data}
-          style={{ stroke: "white" }}
           onNearestX={datapoint => mouseOver(datapoint)}
         />
       </XYPlot>

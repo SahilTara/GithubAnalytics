@@ -8,28 +8,19 @@ interface IProps {}
 
 const ComparePage: React.FC<IProps> = props => {
   // const [searchText, searchChangeHandler] = useState("");
-  const state = {
-    items: [
-      { title: "User1", color: "#3a3" },
-      { title: "User2234", color: "#fc0" }
-    ],
-    searchText: ""
-  };
 
   const totalDataAddition = [
-    { x: new Date("May 20 2017").toDateString(), y: 12 },
-    { x: new Date("May 23 2017").toDateString(), y: 17 },
-    { x: new Date("May 24 2017").toDateString(), y: 10 },
-    { x: new Date("May 26 2017").toDateString(), y: 26 },
-    { x: new Date("May 27 2017").toDateString(), y: 21 },
-    { x: new Date("May 28 2017").toDateString(), y: 14 },
-    { x: new Date("May 29 2017").toDateString(), y: 3 },
-    { x: new Date("May 30 2017").toDateString(), y: 17 },
-    { x: new Date("May 17 2017").toDateString(), y: 21 },
-    { x: new Date("May 16 2017").toDateString(), y: 10 },
-    { x: new Date("May 18 2017").toDateString(), y: 26 },
-    { x: new Date("May 13 2017").toDateString(), y: 18 }
+    { x: "Sahil", y: 22, color: "red" },
+    { x: "Mary", y: 17, color: "blue" },
+    { x: "Michael", y: 6, color: "green" }
   ];
+
+  const state = {
+    items: totalDataAddition.map(item => {
+      return { title: item.x, color: item.color };
+    }),
+    searchText: ""
+  };
 
   const lineDataAddition = [
     { x: new Date("May 20 2017").getTime(), y: 1242 },
@@ -67,22 +58,24 @@ const ComparePage: React.FC<IProps> = props => {
         <Row>
           <Col>
             <NumberVsTextBarGraph
-              title={"Compare Lines Added"}
+              title={"Compare Commits"}
               data={totalDataAddition}
-              xAxisLabel={"Date"}
-              yAxisLabel={"Lines"}
+              xAxisLabel={"Username"}
+              yAxisLabel={"Commits"}
+              width={800}
             />
             <NumberVsTimeMultiLineGraph
               title={"Compare Lines Added"}
               data={[lineDataAddition, lineDataDeletion]}
               xAxisLabel={"Date"}
               yAxisLabel={"Lines"}
-              lineLabels={["User1", "User2"]}
+              lineLabels={["Sahil", "Mary"]}
               legend={false}
+              width={800}
             />
           </Col>
           <Col xs={{ span: "3" }}>
-            <CompareLegend items={state.items} searchText={state.searchText} />
+            <CompareLegend state={state} />
           </Col>
         </Row>
       </div>
