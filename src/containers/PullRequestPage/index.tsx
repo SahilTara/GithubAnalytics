@@ -147,7 +147,7 @@ const PullRequestPage: React.FC<Props> = props => {
               <DonutGraphWithLeaderboard
                 data={prsMergedLeaderboard}
                 title={"Top Users by PRs Merged"}
-                category={"PRs Merged"}
+                category={"PRs"}
                 maximum={5}
               />
             )}
@@ -155,7 +155,7 @@ const PullRequestPage: React.FC<Props> = props => {
               <DonutGraphWithLeaderboard
                 data={prsOpenedLeaderboard}
                 title={"Top Users by PRs Opened"}
-                category={"PRs Opened"}
+                category={"PRs"}
                 maximum={5}
               />
             )}

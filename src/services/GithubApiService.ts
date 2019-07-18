@@ -43,8 +43,11 @@ class GithubApiService {
       onAbuseLimit: (retryAfter: number, options: any) => {
         // does not retry, only logs a warning
         console.warn(
-          `Abuse detected for request ${options.method} ${options.url}`
+          `Abuse detected for request ${options.method} ${
+            options.url
+          } retrying after ${retryAfter}`
         );
+        return true;
       }
     });
   }
@@ -127,7 +130,7 @@ class GithubApiService {
             )
             .then(commit =>
               Promise.resolve({
-                author: commit.author.login,
+                author: commit.committer.login,
                 createdAt: commit.commit.committer.date,
                 additions: commit.stats.additions,
                 deletions: commit.stats.deletions,

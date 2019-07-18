@@ -16,6 +16,7 @@ import SearchBar from "../../components/SearchBar";
 import { getRepositoriesFromSearchAction } from "../../actions/searchInfoActions/searchQueryRepositories";
 import { setSearchInProgressStatusAction } from "../../actions/searchInfoActions/isSearchInProgress";
 import { setQueryTextAction } from "../../actions/searchInfoActions/lastQueryText";
+import TopNavBar from "../../components/TopNavBar";
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
@@ -67,30 +68,35 @@ const Home: React.FC<Props> = props => {
   };
 
   return (
-    <Container>
+    <div>
       {(!isLoggedIn && <LoginPage />) || (
         <div>
-          <Row>
-            <Col md={{ span: 6, offset: 3 }}>
-              <SearchBar searchHandler={handleSearch} />
-            </Col>
-          </Row>
+          <TopNavBar />
+          <Container>
+            <div>
+              <Row>
+                <Col md={{ span: 6, offset: 3 }}>
+                  <SearchBar searchHandler={handleSearch} />
+                </Col>
+              </Row>
 
-          {userRepos.length > 0 && (
-            <HorizontalScroller
-              title={"Your Repositories"}
-              repos={userRepos}
-              onClick={onClick}
-            />
-          )}
-          <HorizontalScroller
-            title={"Explore popular repositories"}
-            repos={popularRepos}
-            onClick={onClick}
-          />
+              {userRepos.length > 0 && (
+                <HorizontalScroller
+                  title={"Your Repositories"}
+                  repos={userRepos}
+                  onClick={onClick}
+                />
+              )}
+              <HorizontalScroller
+                title={"Explore popular repositories"}
+                repos={popularRepos}
+                onClick={onClick}
+              />
+            </div>
+          </Container>
         </div>
       )}
-    </Container>
+    </div>
   );
 };
 

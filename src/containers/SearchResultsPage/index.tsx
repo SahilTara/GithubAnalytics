@@ -8,15 +8,13 @@ import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import RootAction from "../../actions";
 import { setCurrentRepositoryAction } from "../../actions/repositoryInfoActions/setCurrentRepository";
-import { getPopularRepositoriesAction } from "../../actions/dashboardInfoActions/getPopularRepositories";
-import { getUserRepositoriesAction } from "../../actions/dashboardInfoActions/getUserRepositories";
 import { getRepositoriesFromSearchAction } from "../../actions/searchInfoActions/searchQueryRepositories";
 import { setSearchInProgressStatusAction } from "../../actions/searchInfoActions/isSearchInProgress";
 import { connect } from "react-redux";
 import styles from "./styles.module.css";
 import classNames from "classnames";
-import isSearchInProgress from "../../reducers/searchInfoReducers/isSearchInProgressReducer";
 import { setQueryTextAction } from "../../actions/searchInfoActions/lastQueryText";
+import TopNavBar from "../../components/TopNavBar";
 const Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
@@ -76,30 +74,41 @@ const SearchResultsPage: React.FC<Props> = ({
   );
 
   return (
-    <Container>
-      {withLoading(
-        <div>
-          <Row>
-            <Col md={{ span: 6, offset: 3 }}>
-              <SearchBar
-                searchHandler={handleSearch}
-                initialValue={textToSearch}
-              />
-            </Col>
-          </Row>
-          <Row>
-            {repos.map(repo => {
-              return (
-                <Col md={5}>
-                  <RepositoryCard info={repo} onClick={onClick} />
-                </Col>
-              );
-            })}
-          </Row>
-        </div>,
-        !searchInProgress
-      )}
-    </Container>
+    <>
+      <TopNavBar />
+      <Container>
+        {withLoading(
+          <div>
+            <Row>
+              <Col md={{ span: 6, offset: 3 }}>
+                <SearchBar
+                  searchHandler={handleSearch}
+                  initialValue={textToSearch}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={{ span: 10, offset: 2 }}>
+                <Row>
+                  {repos.map(repo => {
+                    return (
+                      <Col md={5} style={{ marginTop: "20px" }}>
+                        <RepositoryCard
+                          info={repo}
+                          onClick={onClick}
+                          style={{ padding: "20px" }}
+                        />
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </Col>
+            </Row>
+          </div>,
+          !searchInProgress
+        )}
+      </Container>
+    </>
   );
 };
 
