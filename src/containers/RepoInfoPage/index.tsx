@@ -20,6 +20,9 @@ import styles from "./styles.module.css";
 import classNames from "classnames";
 import CommitsPage from "../CommitsPage";
 import { ICommitData } from "../../types/ICommitData";
+import { getTimeSpanStartDate } from "../../utils/getTimeSpanStartDate";
+import PullRequestPage from "../PullRequestPage";
+import IssuesPage from "../IssuesPage";
 let Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
@@ -103,57 +106,28 @@ const RepoInfoPage: React.FC<Props> = props => {
       let totalAdditions = 0;
       let totalDeletions = 0;
 
-      let timeToCompareTo: Date = new Date();
-      switch (timeSpan) {
-        case TIME_SPAN.LAST_7_DAYS:
-          const sevenDaysAgo = new Date();
-          sevenDaysAgo.setDate(now.getDate() - 7);
-          sevenDaysAgo.setHours(0, 0, 0, 0);
-          timeToCompareTo = sevenDaysAgo;
-          break;
-        case TIME_SPAN.LAST_MONTH:
-          const oneMonthAgo = new Date();
-          oneMonthAgo.setMonth(now.getMonth() - 1, now.getDate());
-          oneMonthAgo.setHours(0, 0, 0, 0);
-          timeToCompareTo = oneMonthAgo;
-          break;
-        case TIME_SPAN.LAST_YEAR:
-          const oneYearAgo = new Date();
-          oneYearAgo.setFullYear(
-            now.getFullYear() - 1,
-            now.getMonth(),
-            now.getDate()
-          );
-          oneYearAgo.setHours(0, 0, 0, 0);
-          timeToCompareTo = oneYearAgo;
-          break;
-      }
+      let timeSpanStartDate: Date = getTimeSpanStartDate(timeSpan);
+
       issues.forEach(issue => {
-        if (new Date(issue.createdAt).getTime() >= timeToCompareTo.getTime()) {
+        if (new Date(issue.createdAt) >= timeSpanStartDate) {
           numberOfIssuesOpened += 1;
         }
-        if (
-          issue.closed &&
-          new Date(issue.closedAt).getTime() >= timeToCompareTo.getTime()
-        ) {
+        if (issue.closed && new Date(issue.closedAt) >= timeSpanStartDate) {
           numberOfIssuesClosed += 1;
         }
       });
 
       prs.forEach(pr => {
-        if (new Date(pr.createdAt).getTime() >= timeToCompareTo.getTime()) {
+        if (new Date(pr.createdAt) >= timeSpanStartDate) {
           numberOfPrsOpened += 1;
         }
-        if (
-          pr.merged &&
-          new Date(pr.mergedAt).getTime() >= timeToCompareTo.getTime()
-        ) {
+        if (pr.merged && new Date(pr.mergedAt) >= timeSpanStartDate) {
           numberOfPrsMerged += 1;
         }
       });
 
       commits.forEach(commit => {
-        if (new Date(commit.createdAt).getTime() >= timeToCompareTo.getTime()) {
+        if (new Date(commit.createdAt) >= timeSpanStartDate) {
           numberOfCommitsMade += 1;
           totalAdditions += commit.additions;
           totalDeletions += commit.deletions;
@@ -197,6 +171,28 @@ const RepoInfoPage: React.FC<Props> = props => {
             commitsMade={commitsMade}
             linesAdded={linesAdded}
             linesDeleted={linesDeleted}
+          />,
+          doneLoading
+        )}
+      </Tab>
+
+      <Tab eventKey="issues" title="Issues">
+        {withLoading(
+          <IssuesPage
+            issues={issues}
+            issuesClosed={issuesClosed}
+            issuesOpened={issuesOpened}
+          />,
+          doneLoading
+        )}
+      </Tab>
+
+      <Tab eventKey="prs" title="Pull Requests">
+        {withLoading(
+          <PullRequestPage
+            prs={prs}
+            prsMerged={prsMerged}
+            prsOpened={prsOpened}
           />,
           doneLoading
         )}
