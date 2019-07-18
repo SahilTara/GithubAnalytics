@@ -15,6 +15,8 @@ import { Card } from "react-bootstrap";
 import "./style.css";
 import { TIME_SPAN } from "../../../../types/TimeSpan";
 import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
+import { getTimeBounds } from "../../../../utils/getTimeBounds";
+import IUserColor from "../../../../types/IUserColor";
 
 // takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
@@ -23,33 +25,30 @@ interface IProps {
   title: string;
   data: IBarGraphData[][];
   lineLabels?: string[];
-  timeSpan: TIME_SPAN;
+  timeSpan?: TIME_SPAN;
   xAxisLabel: string;
   yAxisLabel: string;
   legend?: boolean;
   width?: number;
+  colors?: IUserColor[];
 }
 
 const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   title,
   data,
   lineLabels,
-  timeSpan,
   xAxisLabel,
   yAxisLabel,
   legend,
-  width
+  width,
+  colors
 }) => {
-  let maxY = 0,
+  let minX = +Infinity,
+    maxX = 0,
+    maxY = 0,
     minY = +Infinity;
   const [state, setState] = useState({ value: false });
   const [tooltip, setTooltip] = useState({});
-
-  const startDate = getTimeSpanStartDate(timeSpan);
-  startDate.setDate(startDate.getDate() - 1); // set to one day before to ensure graph doesn't overflow
-  const today = new Date();
-  today.setDate(today.getDate() + 1); // set to one day after to ensure graph doesn't overflow
-  today.setHours(0, 0, 0, 0);
 
   const theData = data.map(subdata => subdata.slice());
 
@@ -57,7 +56,13 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     subdata.sort((a: IBarGraphData, b: IBarGraphData) => {
       return a.x - b.x;
     });
-    subdata.forEach((item: { y: number }) => {
+    subdata.forEach((item: { x: number; y: number }) => {
+      if (item.x > maxX) {
+        maxX = item.x;
+      }
+      if (item.x < minX) {
+        minX = item.x;
+      }
       if (item.y > maxY) {
         maxY = item.y;
       }
@@ -67,11 +72,14 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     });
   });
 
+  const [startDate, endDate] = getTimeBounds(new Date(minX), new Date(maxX));
+
   const yInterval = Math.ceil((maxY * 1.1) / 4);
   const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
 
   const startDateAsTime = startDate.getTime();
-  const todayAsTime = today.getTime();
+  const endDateAsTime = endDate.getTime();
+  console.log("color " + JSON.stringify(colors));
 
   const mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
     setState({ value: true });
@@ -89,7 +97,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     let date = new Date(dateMs).toDateString().split(" ");
     let dateTick: string;
     const sixMonths = 15552000000;
-    if (todayAsTime - startDateAsTime < sixMonths) {
+    if (endDateAsTime - startDateAsTime < sixMonths) {
       dateTick = date[1] + " " + date[2];
     } else {
       dateTick = date[2] + " " + date[3];
@@ -104,7 +112,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         <DiscreteColorLegend orientation="horizontal" items={lineLabels} />
       ) : null}
       <XYPlot
-        xDomain={[startDateAsTime, todayAsTime]}
+        xDomain={[startDateAsTime, endDateAsTime]}
         yDomain={[0, yTicks[4]]}
         xType="time"
         height={300}
@@ -114,7 +122,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
-          tickValues={[startDateAsTime, todayAsTime]}
+          tickValues={[startDateAsTime, endDateAsTime]}
           tickFormat={value => dateTickFormater(value)}
         />
         <ChartLabel
@@ -137,13 +145,14 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
             textAnchor: "end"
           }}
         />
-        {theData.map((subData: MarkSeriesPoint[]) => {
+        {theData.map((subData: MarkSeriesPoint[], index) => {
           return (
             <LineMarkSeries
               data={subData}
               onValueMouseOver={(datapoint, event) =>
                 mouseOver(datapoint, event)
               }
+              color={colors ? colors[index].color : undefined}
             />
           );
         })}

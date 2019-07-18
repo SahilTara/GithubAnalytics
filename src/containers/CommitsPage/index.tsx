@@ -126,7 +126,6 @@ const CommitsPage: React.FC<Props> = props => {
                 <NumberVsTimeBarGraph
                   title={"Commits per Day"}
                   data={commitsOverTime}
-                  timeSpan={timeSpan}
                   xAxisLabel={"Date"}
                   yAxisLabel={"Commits"}
                 />
@@ -138,7 +137,6 @@ const CommitsPage: React.FC<Props> = props => {
                   xAxisLabel={"Date"}
                   yAxisLabel={"Lines"}
                   lineLabels={["Additions", "Deletions"]}
-                  timeSpan={timeSpan}
                   legend={true}
                 />
               )}
