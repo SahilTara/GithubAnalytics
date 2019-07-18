@@ -127,7 +127,6 @@ const PullRequestPage: React.FC<Props> = props => {
               <NumberVsTimeLineGraph
                 title={"Average Time to Merge PRs (by create date)"}
                 data={averageTimeToMergePrs}
-                timeSpan={timeSpan}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Time taken to merge (hours)"}
               />
@@ -136,7 +135,6 @@ const PullRequestPage: React.FC<Props> = props => {
               <NumberVsTimeBarGraph
                 title={"PRs opened per Day"}
                 data={openedPullRequestsOverTime}
-                timeSpan={timeSpan}
                 xAxisLabel={"Date"}
                 yAxisLabel={"PRs Opened"}
               />
