@@ -102,17 +102,11 @@ const CompareLegend: React.FC<IProps> = ({ state, parentCallBack }) => {
 
   const LegendElement = (value: any) => {
     const [disabled, disable] = useState(false);
-    console.log(value);
-    console.log(disabled);
-
-    // const setDisabled = () => {
-    //   disable(!disabled)
-    // }
-
     return disabled ? (
       <div
         onClick={() => {
-          disable(false);
+          disable(true);
+          console.log("greyed out");
           console.log(disabled);
         }}
         style={{ color: "grey" }}
@@ -120,7 +114,13 @@ const CompareLegend: React.FC<IProps> = ({ state, parentCallBack }) => {
         {value.value.title}
       </div>
     ) : (
-      <div onClick={() => disable(false)}>
+      <div
+        onClick={() => {
+          disable(true);
+          console.log("ALIVE");
+          console.log(disabled);
+        }}
+      >
         {value.value.title}
         <ColorButton color={value.value.color} />
       </div>

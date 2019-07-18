@@ -48,6 +48,7 @@ class GithubApiService {
       }
     });
   }
+
   public static getAuthUrl(): string {
     const clientId = process.env.REACT_APP_CLIENT_ID || "";
     return `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo`;
@@ -155,7 +156,7 @@ class GithubApiService {
       .then(issues =>
         issues.map<Promise<IIssueData>>(async issue => {
           // not scalable, we get additional info for each issue, so we get the actor.
-          if (issue.closed_at) {
+          if (issue.closed_at && !issue.pull_request) {
             // issue is closed so we need additional info
             return await GithubApiService.octokit.issues
               .get({

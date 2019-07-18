@@ -4,19 +4,17 @@ import DropdownItem from "react-bootstrap/DropdownItem";
 
 interface IProps {
   options: string[];
-  placeholder: string;
+  title: string;
   className: string;
   id: string;
   onChangeHook: (key: string) => void;
 }
 
 const SelectableItems: React.FC<IProps> = (props: IProps) => {
-  const { options, placeholder, id, className, onChangeHook } = props;
-  const [title, setTitle] = useState(placeholder);
+  const { options, title, id, className, onChangeHook } = props;
 
   const handleChange = (key: string) => {
     onChangeHook(key);
-    setTitle(key);
   };
 
   return (

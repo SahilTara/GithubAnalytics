@@ -13,6 +13,14 @@ import { connect } from "react-redux";
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
 import { ICommitData } from "../../types/ICommitData";
 import SelectableItems from "../../components/SelectableItems";
+import {
+  getLeaderboardData,
+  getCommitsOverTimeData,
+  getAdditionsAndDeletionsData
+} from "./utils";
+import { getTimeSpanStartDate } from "../../utils/getTimeSpanStartDate";
+import classNames from "classnames";
+import styles from "./styles.module.css";
 
 interface IProps {
   commitsMade: number;
@@ -34,100 +42,6 @@ const commitsOverTimeInitial: IBarGraphData[] = [];
 const additionsAndDeletionsInitial: IBarGraphData[][] = [];
 
 type Props = IProps & IStateProps & IDispatchProps;
-
-const getLeaderboardData = (
-  commits: ICommitData[],
-  dateToCompare: Date
-): IDonutGraphData[] => {
-  const leaderboardProcessedData: Map<string, number> = new Map();
-  const leaderboardGraphData: IDonutGraphData[] = [];
-  commits.forEach(commit => {
-    const { author, createdAt } = commit;
-    if (new Date(createdAt).getTime() >= dateToCompare.getTime()) {
-      const leaderboardCommitCount:
-        | number
-        | undefined = leaderboardProcessedData.get(author);
-      if (leaderboardCommitCount !== undefined) {
-        leaderboardProcessedData.set(author, leaderboardCommitCount + 1);
-      } else {
-        leaderboardProcessedData.set(author, 1);
-      }
-    }
-  });
-  leaderboardProcessedData.forEach((value, key) => {
-    leaderboardGraphData.push({ label: key, value: value });
-  });
-
-  return leaderboardGraphData;
-};
-
-const getCommitsOverTimeData = (
-  commits: ICommitData[],
-  dateToCompare: Date
-): IBarGraphData[] => {
-  const commitsOverTimeProcessedData: Map<number, number> = new Map();
-  const commitsOverTimeGraphData: IBarGraphData[] = [];
-  commits.forEach(commit => {
-    const { createdAt } = commit;
-    const date = new Date(createdAt);
-    date.setHours(0, 0, 0, 0);
-    const time = date.getTime();
-    if (time >= dateToCompare.getTime()) {
-      const commitCountForDate:
-        | number
-        | undefined = commitsOverTimeProcessedData.get(time);
-      if (commitCountForDate !== undefined) {
-        commitsOverTimeProcessedData.set(time, commitCountForDate + 1);
-      } else {
-        commitsOverTimeProcessedData.set(time, 1);
-      }
-    }
-  });
-  commitsOverTimeProcessedData.forEach((value, key) => {
-    commitsOverTimeGraphData.push({ x: key, y: value });
-  });
-
-  return commitsOverTimeGraphData;
-};
-
-const getAdditionsAndDeletionsData = (
-  commits: ICommitData[],
-  dateToCompare: Date
-): IBarGraphData[][] => {
-  const commitsAdditionDeletionProcessedData: Map<
-    number,
-    [number, number]
-  > = new Map();
-  const commitsAdditionGraphData: IBarGraphData[] = [];
-  const commitsDeletionGraphData: IBarGraphData[] = [];
-
-  commits.forEach(commit => {
-    const { createdAt, additions, deletions } = commit;
-    const date = new Date(createdAt);
-    date.setHours(0, 0, 0, 0);
-    const time = date.getTime();
-    if (time >= dateToCompare.getTime()) {
-      const additionsAndDeletionsForDate = commitsAdditionDeletionProcessedData.get(
-        time
-      );
-
-      if (additionsAndDeletionsForDate !== undefined) {
-        commitsAdditionDeletionProcessedData.set(time, [
-          additionsAndDeletionsForDate[0] + additions,
-          additionsAndDeletionsForDate[1] + deletions
-        ]);
-      } else {
-        commitsAdditionDeletionProcessedData.set(time, [additions, deletions]);
-      }
-    }
-  });
-  commitsAdditionDeletionProcessedData.forEach((value, key) => {
-    commitsAdditionGraphData.push({ x: key, y: value[0] });
-    commitsDeletionGraphData.push({ x: key, y: value[1] });
-  });
-
-  return [commitsAdditionGraphData, commitsDeletionGraphData];
-};
 
 const CommitsPage: React.FC<Props> = props => {
   const {
@@ -161,32 +75,7 @@ const CommitsPage: React.FC<Props> = props => {
   };
 
   useEffect(() => {
-    const now = new Date();
-    let timeToCompareTo: Date = new Date();
-    switch (timeSpan) {
-      case TIME_SPAN.LAST_7_DAYS:
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(now.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-        timeToCompareTo = sevenDaysAgo;
-        break;
-      case TIME_SPAN.LAST_MONTH:
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(now.getMonth() - 1, now.getDate());
-        oneMonthAgo.setHours(0, 0, 0, 0);
-        timeToCompareTo = oneMonthAgo;
-        break;
-      case TIME_SPAN.LAST_YEAR:
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(
-          now.getFullYear() - 1,
-          now.getMonth(),
-          now.getDate()
-        );
-        oneYearAgo.setHours(0, 0, 0, 0);
-        timeToCompareTo = oneYearAgo;
-        break;
-    }
+    const timeToCompareTo = getTimeSpanStartDate(timeSpan);
     setCommitLeaderBoard(getLeaderboardData(commits, timeToCompareTo));
     setCommitsOverTime(getCommitsOverTimeData(commits, timeToCompareTo));
     setAdditionsAndDeletions(
@@ -194,14 +83,25 @@ const CommitsPage: React.FC<Props> = props => {
     );
   }, [commits, timeSpan]);
 
+  const linesWereChanged = linesAdded > 0 || linesDeleted > 0;
+  const hasData =
+    commitLeaderboard.length > 0 ||
+    commitsOverTime.length > 0 ||
+    linesWereChanged;
+
   return (
     <Container className="show-grid">
+      {!hasData && (
+        <h2 className={classNames(styles.vert_centre)}>
+          Sorry, No Graphable Data Found For This Range
+        </h2>
+      )}
       <div style={{ paddingTop: "20px" }}>
         <Row style={{ paddingBottom: "20px" }}>
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
               options={timeSpans}
-              placeholder={timeSpan}
+              title={timeSpan}
               className=""
               id="time-span"
               onChangeHook={selectTimeSpan}
@@ -212,37 +112,47 @@ const CommitsPage: React.FC<Props> = props => {
           <Col>
             <Row>
               <Col>
-                <SummaryCard count={commitsMade} subtitle={"commits"} />
+                <SummaryCard count={commitsMade} subtitle={"Commits"} />
               </Col>
               <Col>
-                <SummaryCard count={linesAdded} subtitle={"additions"} />
+                <SummaryCard count={linesAdded} subtitle={"Additions"} />
               </Col>
               <Col>
-                <SummaryCard count={linesDeleted} subtitle={"deletions"} />
+                <SummaryCard count={linesDeleted} subtitle={"Deletions"} />
               </Col>
             </Row>
-            <NumberVsTimeBarGraph
-              title={"Commits per Day"}
-              data={commitsOverTime}
-              xAxisLabel={"Date"}
-              yAxisLabel={"Commits"}
-            />
-            <NumberVsTimeMultiLineGraph
-              title={"Additions and Deletions per Day"}
-              data={additionsAndDeletions}
-              xAxisLabel={"Date"}
-              yAxisLabel={"Lines"}
-              lineLabels={["Additions", "Deletions"]}
-              legend={true}
-            />
+            <>
+              {commitsMade > 0 && (
+                <NumberVsTimeBarGraph
+                  title={"Commits per Day"}
+                  data={commitsOverTime}
+                  timeSpan={timeSpan}
+                  xAxisLabel={"Date"}
+                  yAxisLabel={"Commits"}
+                />
+              )}
+              {linesWereChanged && (
+                <NumberVsTimeMultiLineGraph
+                  title={"Additions and Deletions per Day"}
+                  data={additionsAndDeletions}
+                  xAxisLabel={"Date"}
+                  yAxisLabel={"Lines"}
+                  lineLabels={["Additions", "Deletions"]}
+                  timeSpan={timeSpan}
+                  legend={true}
+                />
+              )}
+            </>
           </Col>
           <Col>
-            <DonutGraphWithLeaderboard
-              data={commitLeaderboard}
-              title={"Top Users by Commits on Main Branch"}
-              category={"Commits"}
-              maximum={5}
-            />
+            {commitLeaderboard.length > 0 && (
+              <DonutGraphWithLeaderboard
+                data={commitLeaderboard}
+                title={"Top Users by Commits on Main Branch"}
+                category={"Commits"}
+                maximum={5}
+              />
+            )}
           </Col>
         </Row>
       </div>

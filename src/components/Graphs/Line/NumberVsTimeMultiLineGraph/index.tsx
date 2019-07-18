@@ -13,6 +13,8 @@ import {
 import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
 import { Card } from "react-bootstrap";
 import "./style.css";
+import { TIME_SPAN } from "../../../../types/TimeSpan";
+import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
 
 // takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
@@ -21,6 +23,7 @@ interface IProps {
   title: string;
   data: IBarGraphData[][];
   lineLabels: string[];
+  timeSpan: TIME_SPAN;
   xAxisLabel: string;
   yAxisLabel: string;
   legend?: boolean;
@@ -31,23 +34,30 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   title,
   data,
   lineLabels,
+  timeSpan,
   xAxisLabel,
   yAxisLabel,
   legend,
   width
 }) => {
-  let maxX = 0,
-    minX = +Infinity,
-    maxY = 0,
+  let maxY = 0,
     minY = +Infinity;
   const [state, setState] = useState({ value: false });
   const [tooltip, setTooltip] = useState({});
 
-  let theData = JSON.parse(JSON.stringify(data));
+  const startDate = getTimeSpanStartDate(timeSpan);
+  startDate.setDate(startDate.getDate() - 1); // set to one day before to ensure graph doesn't overflow
+  const today = new Date();
+  today.setDate(today.getDate() + 1); // set to one day after to ensure graph doesn't overflow
+  today.setHours(0, 0, 0, 0);
+
+  const theData = data.map(subdata => subdata.slice());
+
   theData.forEach((subdata: IBarGraphData[]) => {
     subdata.sort((a: IBarGraphData, b: IBarGraphData) => {
       return a.x - b.x;
     });
+<<<<<<< HEAD
     subdata.forEach((item: { x: number; y: number }) => {
       if (item.x > maxX) {
         maxX = item.x;
@@ -55,6 +65,9 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
       if (item.x < minX) {
         minX = item.x;
       }
+=======
+    subdata.forEach((item: { y: number }) => {
+>>>>>>> 4fe2af41e9b0362d63dd5eabb3a28bd7189227d1
       if (item.y > maxY) {
         maxY = item.y;
       }
@@ -67,12 +80,14 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   const yInterval = Math.ceil((maxY * 1.1) / 4);
   const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
 
-  const xInterval = Math.ceil((maxX - minX) / 4);
-  const xTicks = Array.from({ length: 5 }, (x, i) => {
-    return minX + xInterval * i;
-  });
+  const startDateAsTime = startDate.getTime();
+  const todayAsTime = today.getTime();
 
+<<<<<<< HEAD
   let mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
+=======
+  const mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
+>>>>>>> 4fe2af41e9b0362d63dd5eabb3a28bd7189227d1
     setState({ value: true });
     setTooltip(
       "Date: " +
@@ -84,10 +99,11 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     );
   };
 
-  let dateTickFormater = (dateMs: number) => {
+  const dateTickFormater = (dateMs: number) => {
     let date = new Date(dateMs).toDateString().split(" ");
     let dateTick: string;
-    if (maxX - minX < 15552000000) {
+    const sixMonths = 15552000000;
+    if (todayAsTime - startDateAsTime < sixMonths) {
       dateTick = date[1] + " " + date[2];
     } else {
       dateTick = date[2] + " " + date[3];
@@ -102,7 +118,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         <DiscreteColorLegend orientation="horizontal" items={lineLabels} />
       ) : null}
       <XYPlot
-        xDomain={[minX, maxX]}
+        xDomain={[startDateAsTime, todayAsTime]}
         yDomain={[0, yTicks[4]]}
         xType="time"
         height={300}
@@ -112,7 +128,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
-          tickValues={xTicks}
+          tickValues={[startDateAsTime, todayAsTime]}
           tickFormat={value => dateTickFormater(value)}
         />
         <ChartLabel
