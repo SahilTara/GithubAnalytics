@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import NumberVsTimeMultiLineGraph from "../../components/Graphs/Line/NumberVsTimeMultiLineGraph";
 import CompareLegend from "../../components/CompareLegend";
@@ -7,7 +7,7 @@ import NumberVsTextBarGraph from "../../components/Graphs/Bar/NumberVsTextBarGra
 interface IProps {}
 
 const ComparePage: React.FC<IProps> = props => {
-  // const [searchText, searchChangeHandler] = useState("");
+  const [isTotal, changeMode] = useState(true);
 
   const totalDataAddition = [
     { x: "Sahil", y: 22, color: "red" },
@@ -56,26 +56,31 @@ const ComparePage: React.FC<IProps> = props => {
     <Container>
       <div style={{ paddingTop: "20px" }}>
         <Row>
-          <Col>
-            <NumberVsTextBarGraph
-              title={"Compare Commits"}
-              data={totalDataAddition}
-              xAxisLabel={"Username"}
-              yAxisLabel={"Commits"}
-              width={800}
-            />
-            <NumberVsTimeMultiLineGraph
-              title={"Compare Lines Added"}
-              data={[lineDataAddition, lineDataDeletion]}
-              xAxisLabel={"Date"}
-              yAxisLabel={"Lines"}
-              lineLabels={["Sahil", "Mary"]}
-              legend={false}
-              width={800}
-            />
-          </Col>
+          {isTotal ? (
+            <Col>
+              <NumberVsTextBarGraph
+                title={"Compare Commits"}
+                data={totalDataAddition}
+                xAxisLabel={"Username"}
+                yAxisLabel={"Commits"}
+                width={800}
+              />
+            </Col>
+          ) : (
+            <Col>
+              <NumberVsTimeMultiLineGraph
+                title={"Compare Lines Added"}
+                data={[lineDataAddition, lineDataDeletion]}
+                xAxisLabel={"Date"}
+                yAxisLabel={"Lines"}
+                lineLabels={["Sahil", "Mary"]}
+                legend={false}
+                width={800}
+              />
+            </Col>
+          )}
           <Col xs={{ span: "3" }}>
-            <CompareLegend state={state} />
+            <CompareLegend state={state} parentCallBack={changeMode} />
           </Col>
         </Row>
       </div>

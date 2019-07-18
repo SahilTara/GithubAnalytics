@@ -6,9 +6,10 @@ import "./style.css";
 
 interface IProps {
   state: { items: any[]; searchText: string };
+  parentCallBack: (isTotal: boolean) => void;
 }
 
-const CompareLegend: React.FC<IProps> = ({ state }) => {
+const CompareLegend: React.FC<IProps> = ({ state, parentCallBack }) => {
   const [items, setItems] = useState(state.items);
   // const [items, setItems] = useState([
 
@@ -99,19 +100,47 @@ const CompareLegend: React.FC<IProps> = ({ state }) => {
     );
   };
 
+  const LegendElement = (value: any) => {
+    const [disabled, disable] = useState(false);
+    console.log(value);
+    console.log(disabled);
+
+    // const setDisabled = () => {
+    //   disable(!disabled)
+    // }
+
+    return disabled ? (
+      <div
+        onClick={() => {
+          disable(false);
+          console.log(disabled);
+        }}
+        style={{ color: "grey" }}
+      >
+        {value.value.title}
+      </div>
+    ) : (
+      <div onClick={() => disable(false)}>
+        {value.value.title}
+        <ColorButton color={value.value.color} />
+      </div>
+    );
+  };
+
   const legendElements = items.map(value => {
+    // console.log(value);
     return {
-      title: (
-        <>
-          {value.title}
-          <ColorButton color={value.color} />
-        </>
-      ),
+      title: <LegendElement value={value} />,
       color: value.color,
       strokeWidth: 0,
       key: value.title
     };
   });
+
+  const setTotalDailyMode = (b: boolean) => {
+    setTotal(b);
+    parentCallBack(b);
+  };
 
   return (
     <Card style={{ padding: "20px", position: "fixed", textAlign: "left" }}>
@@ -128,7 +157,7 @@ const CompareLegend: React.FC<IProps> = ({ state }) => {
             <Button
               value={"Daily"}
               variant="outline-primary"
-              onClick={() => setTotal(false)}
+              onClick={() => setTotalDailyMode(false)}
             >
               Daily
             </Button>
@@ -138,7 +167,7 @@ const CompareLegend: React.FC<IProps> = ({ state }) => {
             <Button
               value={"Total"}
               variant="outline-primary"
-              onClick={() => setTotal(true)}
+              onClick={() => setTotalDailyMode(true)}
             >
               Total
             </Button>
