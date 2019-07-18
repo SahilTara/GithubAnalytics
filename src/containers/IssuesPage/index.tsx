@@ -131,7 +131,6 @@ const IssuesPage: React.FC<Props> = props => {
               <NumberVsTimeLineGraph
                 title={"Average Time to Close Issues (by create date)"}
                 data={averageTimeToCloseIssues}
-                timeSpan={timeSpan}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Time taken to close (hours)"}
               />
@@ -140,7 +139,6 @@ const IssuesPage: React.FC<Props> = props => {
               <NumberVsTimeBarGraph
                 title={"Issues Opened Per Day"}
                 data={openedIssuesOverTime}
-                timeSpan={timeSpan}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Issues Opened"}
               />
