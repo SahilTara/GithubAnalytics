@@ -91,8 +91,19 @@ const ComparePage: React.FC<Props> = props => {
     setUsers(getUsers(commits, prs, issues, timeToCompareTo));
   }, [commits, timeSpan]);
 
+  const itemCallBack = (item: IUserColor) => {
+    const newUsers = [...users].map(user => {
+      if (user.title === item.title) {
+        return item;
+      } else {
+        return user;
+      }
+    });
+    setUsers(newUsers);
+  };
   return (
     <Container>
+      {console.log(users)}
       <div style={{ paddingTop: "20px" }}>
         <Row>
           {isTotal ? (
@@ -155,7 +166,7 @@ const ComparePage: React.FC<Props> = props => {
             <CompareLegend
               state={users}
               modeCallBack={changeMode}
-              // itemCallBack={changeColor}
+              itemCallBack={itemCallBack}
             />
           </Col>
         </Row>

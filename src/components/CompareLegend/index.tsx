@@ -1,6 +1,6 @@
 import { Card, Button, ToggleButtonGroup, Row, Col } from "react-bootstrap";
 import { SearchableDiscreteColorLegend } from "react-vis";
-import React, { useState, useReducer, ReactElement } from "react";
+import React, { useState, useReducer, ReactElement, useEffect } from "react";
 import { SketchPicker, BlockPicker, TwitterPicker } from "react-color";
 import "./style.css";
 import { string } from "prop-types";
@@ -9,11 +9,7 @@ import IUserColor from "../../types/IUserColor";
 interface IProps {
   state: IUserColor[];
   modeCallBack: (isTotal: boolean) => void;
-  itemCallBack?: (item: {
-    title: string;
-    color: string;
-    disabled?: boolean;
-  }) => void;
+  itemCallBack: (item: IUserColor) => void;
 }
 
 const CompareLegend: React.FC<IProps> = ({
@@ -21,26 +17,16 @@ const CompareLegend: React.FC<IProps> = ({
   modeCallBack,
   itemCallBack
 }) => {
-  const [items, setItems] = useState(state);
-  // const [items, setItems] = useState([
-  console.log("state" + JSON.stringify(state));
-  console.log(items);
-  // ]);
   const [searchText, setSearchText] = useState("");
   const [total, setTotal] = useState(true);
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   const clickHandler = (item: any) => {
-    const itemList = state;
     item.disabled = !item.disabled;
-    setItems(itemList); // I'm not sure why this doesn't update the DOM
-    forceUpdate(0);
-    console.log(items);
+    itemCallBack(item);
   };
 
   const searchChangeHandler = (text: string) => {
     setSearchText(text);
-    console.log(items);
   };
 
   const searchFunction = (array: ReactElement[], search: string) => {
@@ -69,9 +55,12 @@ const CompareLegend: React.FC<IProps> = ({
 
     const changeColor = (color: any) => {
       chooseColor(color);
-      console.log(itemCallBack);
-      console.log(modeCallBack);
-      // itemCallBack({ title: value.value.title, color: color });
+      const updatedItem = {
+        title: value.value.title,
+        color: color.hex,
+        disabled: value.value.disabled
+      };
+      itemCallBack(updatedItem);
     };
 
     return disabled ? (
