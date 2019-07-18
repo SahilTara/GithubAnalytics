@@ -60,7 +60,7 @@ const OverviewPage: React.FC<Props> = props => {
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
               options={timeSpans}
-              placeholder={timeSpan}
+              title={timeSpan}
               className=""
               id="time-span"
               onChangeHook={selectTimeSpan}

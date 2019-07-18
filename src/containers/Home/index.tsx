@@ -42,7 +42,6 @@ const Home: React.FC<Props> = props => {
     setCurrentRepo(repository);
     history.push("/repo");
   };
-  console.log(isLoggedIn);
   useEffect(() => {
     if (isLoggedIn) {
       getUserRepos();
