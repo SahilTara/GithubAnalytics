@@ -112,9 +112,13 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
       </XYPlot>
       {state.value ? (
         <div className={classNames(styles.tooltip_box)}>{tooltip}</div>
+      ) : data && data.length > 0 ? (
+        <div style={{ height: "4rem" }}>
+          Hover over a data point for more information.
+        </div>
       ) : (
-        <div className={classNames(styles.tooltip_box)}>
-          Hover over a bar for more information.
+        <div style={{ height: "4rem" }}>
+          No information was retrieved in this time range.
         </div>
       )}
     </Card>

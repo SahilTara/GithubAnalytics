@@ -168,7 +168,6 @@ const ComparePage: React.FC<Props> = props => {
                 data={issuesOverTime}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Issues"}
-                lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
                 timeSpan={TIME_SPAN.LAST_7_DAYS}
@@ -178,7 +177,6 @@ const ComparePage: React.FC<Props> = props => {
                 data={prsOverTime}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Pull requests"}
-                lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
                 timeSpan={TIME_SPAN.LAST_7_DAYS}
@@ -188,7 +186,6 @@ const ComparePage: React.FC<Props> = props => {
                 data={commitsOverTime}
                 xAxisLabel={"Date"}
                 yAxisLabel={"Commits"}
-                lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
                 timeSpan={TIME_SPAN.LAST_7_DAYS}

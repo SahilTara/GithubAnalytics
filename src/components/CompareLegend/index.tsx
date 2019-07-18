@@ -3,7 +3,6 @@ import { SearchableDiscreteColorLegend } from "react-vis";
 import React, { useState, useReducer, ReactElement } from "react";
 import { SketchPicker, BlockPicker, TwitterPicker } from "react-color";
 import "./style.css";
-import { string } from "prop-types";
 import IUserColor from "../../types/IUserColor";
 
 interface IProps {
@@ -33,6 +32,7 @@ const CompareLegend: React.FC<IProps> = ({
   const clickHandler = (item: any) => {
     const itemList = state;
     item.disabled = !item.disabled;
+    console.log(item.disabled);
     setItems(itemList); // I'm not sure why this doesn't update the DOM
     forceUpdate(0);
     console.log(items);
@@ -60,7 +60,7 @@ const CompareLegend: React.FC<IProps> = ({
   const LegendElement = (value: any) => {
     const [show, showPicker] = useState(false);
     const [chosenColor, chooseColor] = useState(value.value.color);
-    const [disabled, disable] = useState(false);
+    // const [disabled, disable] = useState(false);
 
     const clickPicker = (e: any) => {
       showPicker(!show);
@@ -74,24 +74,26 @@ const CompareLegend: React.FC<IProps> = ({
       // itemCallBack({ title: value.value.title, color: color });
     };
 
-    return disabled ? (
+    // return
+    // disabled ? (
+    //   <div
+    //     onClick={() => {
+    //       disable(true);
+    //       console.log("greyed out");
+    //       console.log(disabled);
+    //     }}
+    //     style={{ color: "grey" }}
+    //   >
+    //     {value.value.title}
+    //   </div>
+    // ) : (
+    return (
       <div
-        onClick={() => {
-          disable(true);
-          console.log("greyed out");
-          console.log(disabled);
-        }}
-        style={{ color: "grey" }}
-      >
-        {value.value.title}
-      </div>
-    ) : (
-      <div
-        onClick={() => {
-          disable(true);
-          console.log("ALIVE");
-          console.log(disabled);
-        }}
+      // onClick={() => {
+      //   disable(true);
+      //   console.log("ALIVE");
+      //   console.log(disabled);
+      // }}
       >
         {value.value.title}
         <Button
@@ -134,6 +136,7 @@ const CompareLegend: React.FC<IProps> = ({
         </span>
       </div>
     );
+    // );
   };
 
   const legendElements = state.map(value => {

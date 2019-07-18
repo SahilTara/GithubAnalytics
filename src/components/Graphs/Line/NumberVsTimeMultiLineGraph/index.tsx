@@ -22,7 +22,7 @@ import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
 interface IProps {
   title: string;
   data: IBarGraphData[][];
-  lineLabels: string[];
+  lineLabels?: string[];
   timeSpan: TIME_SPAN;
   xAxisLabel: string;
   yAxisLabel: string;
@@ -100,7 +100,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   return (
     <Card style={{ marginRight: "-10px", marginBottom: "20px" }}>
       <h2 style={{ paddingTop: "20px" }}>{title}</h2>
-      {legend ? (
+      {legend && lineLabels ? (
         <DiscreteColorLegend orientation="horizontal" items={lineLabels} />
       ) : null}
       <XYPlot
@@ -151,9 +151,13 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
 
       {state.value ? (
         <div style={{ height: "4rem" }}>{tooltip}</div>
-      ) : (
+      ) : theData && theData.length > 0 ? (
         <div style={{ height: "4rem" }}>
           Hover over a data point for more information.
+        </div>
+      ) : (
+        <div style={{ height: "4rem" }}>
+          No information was retrieved in this time range.
         </div>
       )}
     </Card>
