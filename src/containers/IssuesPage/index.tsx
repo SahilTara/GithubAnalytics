@@ -151,7 +151,7 @@ const IssuesPage: React.FC<Props> = props => {
               <DonutGraphWithLeaderboard
                 data={issuesClosedLeaderboard}
                 title={"Top Users by Issues Closed"}
-                category={"Prs"}
+                category={"Issues Closed"}
                 maximum={5}
               />
             )}
@@ -159,7 +159,7 @@ const IssuesPage: React.FC<Props> = props => {
               <DonutGraphWithLeaderboard
                 data={issuesOpenedLeaderboard}
                 title={"Top Users by Issues Opened"}
-                category={"Prs"}
+                category={"Issues Opened"}
                 maximum={5}
               />
             )}

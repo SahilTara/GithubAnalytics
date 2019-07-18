@@ -139,6 +139,26 @@ class GithubApiService {
       .then(promises => Promise.all(promises));
   }
 
+  public async search(query: string) {
+    return await GithubApiService.octokit.search
+      .repos({ q: query, per_page: 30 })
+      .then(response =>
+        Promise.resolve(response.data.items as ReposGetResponse[])
+      )
+      .then(repositories =>
+        repositories.map<IRepository>(repositoryGithubType => {
+          return {
+            author: repositoryGithubType.owner.login,
+            avatar: repositoryGithubType.owner.avatar_url,
+            name: repositoryGithubType.name,
+            description: repositoryGithubType.description || "",
+            forks: repositoryGithubType.forks_count,
+            stars: repositoryGithubType.stargazers_count
+          };
+        })
+      );
+  }
+
   public async getIssues(repository: IRepository): Promise<IIssueData[]> {
     const oneYearAgo = this.getOneYearAgo();
 

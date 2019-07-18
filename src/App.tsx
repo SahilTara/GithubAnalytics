@@ -3,7 +3,7 @@ import "./App.css";
 import Home from "./containers/Home";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import RepoInfoPage from "./containers/RepoInfoPage";
-import CommitsPage from "./containers/CommitsPage";
+import SearchResultsPage from "./containers/SearchResultsPage";
 
 const App: React.FC = () => {
   return (
@@ -12,6 +12,7 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/repo" component={RepoInfoPage} />
+          <Route path="/search" component={SearchResultsPage} />
         </Switch>
       </BrowserRouter>
     </div>

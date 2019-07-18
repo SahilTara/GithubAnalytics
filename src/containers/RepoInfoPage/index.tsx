@@ -23,7 +23,7 @@ import { ICommitData } from "../../types/ICommitData";
 import { getTimeSpanStartDate } from "../../utils/getTimeSpanStartDate";
 import PullRequestPage from "../PullRequestPage";
 import IssuesPage from "../IssuesPage";
-let Spinner = require("react-spinkit");
+const Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
@@ -97,7 +97,6 @@ const RepoInfoPage: React.FC<Props> = props => {
 
   useEffect(() => {
     if (doneLoading) {
-      const now = new Date();
       let numberOfIssuesOpened = 0;
       let numberOfIssuesClosed = 0;
       let numberOfPrsOpened = 0;
