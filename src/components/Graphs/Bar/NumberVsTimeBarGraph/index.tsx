@@ -16,6 +16,7 @@ import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 import { TIME_SPAN } from "../../../../types/TimeSpan";
 import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
+import { getTimeBounds } from "../../../../utils/getTimeBounds";
 
 // takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
@@ -23,7 +24,6 @@ import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
 interface IProps {
   title: string;
   data: IBarGraphData[];
-  timeSpan: TIME_SPAN;
   xAxisLabel: string;
   yAxisLabel: string;
 }
@@ -31,22 +31,23 @@ interface IProps {
 const NumberVsTimeBarGraph: React.FC<IProps> = ({
   title,
   data,
-  timeSpan,
   xAxisLabel,
   yAxisLabel
 }) => {
-  let maxY = 0,
+  let minX = +Infinity,
+    maxX = 0,
+    maxY = 0,
     minY = +Infinity;
   const [state, setState] = useState({ value: false });
   const [tooltip, setTooltip] = useState({});
 
-  const startDate = getTimeSpanStartDate(timeSpan);
-  startDate.setDate(startDate.getDate() - 1); // set to one day before to ensure graph doesn't overflow
-  const today = new Date();
-  today.setDate(today.getDate() + 1); // set to one day after to ensure graph doesn't overflow
-  today.setHours(0, 0, 0, 0);
-
-  data.forEach((item: { y: number }) => {
+  data.forEach((item: { x: number; y: number }) => {
+    if (item.x > maxX) {
+      maxX = item.x;
+    }
+    if (item.x < minX) {
+      minX = item.x;
+    }
     if (item.y > maxY) {
       maxY = item.y;
     }
@@ -55,11 +56,13 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({
     }
   });
 
+  const [startDate, endDate] = getTimeBounds(new Date(minX), new Date(maxX));
+
   const yInterval = Math.ceil((maxY * 1.1) / 4);
   const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
 
   const startDateAsTime = startDate.getTime();
-  const todayAsTime = today.getTime();
+  const endDateAsTime = endDate.getTime();
 
   const mouseOver = (datapoint: VerticalBarSeriesPoint) => {
     setState({ value: true });
@@ -71,14 +74,14 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({
         ": " +
         datapoint.y
     );
-    console.log([startDateAsTime, todayAsTime, data]);
+    console.log([startDateAsTime, endDateAsTime, data]);
   };
 
   const dateTickFormater = (dateMs: number) => {
     let date = new Date(dateMs).toDateString().split(" ");
     let dateTick: string;
     const sixMonths = 15552000000;
-    if (todayAsTime - startDateAsTime < sixMonths) {
+    if (endDateAsTime - startDateAsTime < sixMonths) {
       dateTick = date[1] + " " + date[2];
     } else {
       dateTick = date[2] + " " + date[3];
@@ -90,7 +93,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({
     <Card style={{ marginRight: "-10px", marginBottom: "20px" }}>
       <h2 style={{ paddingTop: "20px" }}>{title}</h2>
       <XYPlot
-        xDomain={[startDateAsTime, todayAsTime]}
+        xDomain={[startDateAsTime, endDateAsTime]}
         yDomain={[0, yTicks[4]]}
         xType={"time"}
         width={500}
@@ -100,7 +103,7 @@ const NumberVsTimeBarGraph: React.FC<IProps> = ({
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis
-          tickValues={[startDateAsTime, todayAsTime]}
+          tickValues={[startDateAsTime, endDateAsTime]}
           tickFormat={value => dateTickFormater(value)}
         />
         <ChartLabel

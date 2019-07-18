@@ -91,47 +91,6 @@ const ComparePage: React.FC<Props> = props => {
     setUsers(getUsers(commits, prs, issues, timeToCompareTo));
   }, [commits, timeSpan]);
 
-  // const [totalDataAddition, changeTotalData] = useState([
-  //   { x: "Sahil", y: 22, color: "#FF0000" },
-  //   { x: "Mary", y: 17, color: "#FF0000" },
-  //   { x: "Michael", y: 6, color: "#FF0000" }
-  // ]);
-
-  // const changeColor = (item: { title: string; color: string }) => {
-  //   const totalDataCopy = JSON.parse(JSON.stringify(totalDataAddition));
-  //   totalDataCopy.forEach((datapoint: any) => {
-  //     if (datapoint.title === item.title) {
-  //       datapoint.color = item.color;
-  //     }
-  //   });
-  //   changeTotalData(totalDataCopy);
-  // };
-
-  // const state = {
-  //   items: totalDataAddition.map(item => {
-  //     return { title: item.x, color: item.color };
-  //   }),
-  //   searchText: ""
-  // };
-
-  // const lineDataAddition = [
-  //   { x: new Date("July 10 2019").getTime(), y: 1242 },
-  //   { x: new Date("July 13 2019").getTime(), y: 1217 },
-  //   { x: new Date("July 14 2019").getTime(), y: 1610 },
-  //   { x: new Date("July 16 2019").getTime(), y: 1963 },
-  //   { x: new Date("July 17 2019").getTime(), y: 1521 },
-  //   { x: new Date("July 18 2019").getTime(), y: 1423 }
-  // ];
-
-  // const lineDataDeletion = [
-  //   { x: new Date("July 10 2019").getTime(), y: 542 },
-  //   { x: new Date("July 13 2019").getTime(), y: 217 },
-  //   { x: new Date("July 14 2019").getTime(), y: 2670 },
-  //   { x: new Date("July 16 2019").getTime(), y: 963 },
-  //   { x: new Date("July 17 2019").getTime(), y: 1361 },
-  //   { x: new Date("July 18 2019").getTime(), y: 223 }
-  // ];
-
   return (
     <Container>
       <div style={{ paddingTop: "20px" }}>
@@ -171,7 +130,6 @@ const ComparePage: React.FC<Props> = props => {
                 lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
-                timeSpan={TIME_SPAN.LAST_7_DAYS}
               />
               <NumberVsTimeMultiLineGraph
                 title={"Compare Pull Requests Created"}
@@ -181,7 +139,6 @@ const ComparePage: React.FC<Props> = props => {
                 lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
-                timeSpan={TIME_SPAN.LAST_7_DAYS}
               />
               <NumberVsTimeMultiLineGraph
                 title={"Compare Commits"}
@@ -191,7 +148,6 @@ const ComparePage: React.FC<Props> = props => {
                 lineLabels={["Sahil", "Mary"]}
                 legend={false}
                 width={800}
-                timeSpan={TIME_SPAN.LAST_7_DAYS}
               />
             </Col>
           )}

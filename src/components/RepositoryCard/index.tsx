@@ -1,6 +1,6 @@
 import React from "react";
 import IRepository from "../../types/IRespository";
-import { Card, Col } from "react-bootstrap";
+import { Card, Col, Container } from "react-bootstrap";
 import AvatarImg from "../AvatarImg";
 import styles from "./styles.module.css";
 
@@ -10,11 +10,12 @@ import { Row } from "react-bootstrap";
 interface IProps {
   info: IRepository;
   onClick: (repository: IRepository) => void;
+  style?: React.CSSProperties;
 }
 
 const RepositoryCard: React.FC<IProps> = props => {
   const { author, name, stars, avatar, forks, description } = props.info;
-  const { onClick } = props;
+  const { onClick, style } = props;
 
   const clickHandler = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -22,18 +23,24 @@ const RepositoryCard: React.FC<IProps> = props => {
   };
 
   return (
-    <Card className={classNames(styles.card)} onClick={clickHandler}>
+    <Card
+      className={classNames(styles.card)}
+      onClick={clickHandler}
+      style={style}
+    >
       <Card.Body>
         <Card.Title className={classNames(styles.title)}>
-          <Row className={classNames("justify-content-between")}>
+          <Row className={classNames("justify-content-between")} noGutters>
             <Col xs={1}>
               <AvatarImg
                 avatar={avatar}
                 className={classNames(styles.profilePic)}
               />
             </Col>
-
-            <Col>{`${author}/${name}`}</Col>
+            <Col>
+              <Col>{`${author}/`}</Col>
+              <Col>{`${name}`}</Col>
+            </Col>
           </Row>
         </Card.Title>
         <Card.Text>{description}</Card.Text>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import IRepository from "../../types/IRespository";
 
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { connect } from "react-redux";
 import { getPopularRepositoriesAction } from "../../actions/dashboardInfoActions/getPopularRepositories";
 import { AppState } from "../../reducers";
@@ -12,6 +12,11 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import { setCurrentRepositoryAction } from "../../actions/repositoryInfoActions/setCurrentRepository";
 import LoginPage from "../LoginPage";
 import { getUserRepositoriesAction } from "../../actions/dashboardInfoActions/getUserRepositories";
+import SearchBar from "../../components/SearchBar";
+import { getRepositoriesFromSearchAction } from "../../actions/searchInfoActions/searchQueryRepositories";
+import { setSearchInProgressStatusAction } from "../../actions/searchInfoActions/isSearchInProgress";
+import { setQueryTextAction } from "../../actions/searchInfoActions/lastQueryText";
+import TopNavBar from "../../components/TopNavBar";
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
@@ -23,7 +28,10 @@ interface IStateProps {
 interface IDispatchProps {
   setCurrentRepo: (repository: IRepository) => any;
   getPopularRepos: () => any;
+  performSearch: (query: string) => any;
+  setIsSearching: () => any;
   getUserRepos: () => any;
+  setQueryText: (query: string) => any;
 }
 
 type Props = IStateProps & IDispatchProps & IProps;
@@ -35,7 +43,10 @@ const Home: React.FC<Props> = props => {
     getPopularRepos,
     history,
     setCurrentRepo,
-    isLoggedIn
+    isLoggedIn,
+    performSearch,
+    setIsSearching,
+    setQueryText
   } = props;
 
   const onClick = (repository: IRepository) => {
@@ -48,25 +59,44 @@ const Home: React.FC<Props> = props => {
       getPopularRepos();
     }
   }, [isLoggedIn]);
+
+  const handleSearch = (query: string) => {
+    history.push("/search");
+    setIsSearching();
+    setQueryText(query);
+    performSearch(query);
+  };
+
   return (
-    <Container>
+    <div>
       {(!isLoggedIn && <LoginPage />) || (
         <div>
-          {userRepos.length > 0 && (
-            <HorizontalScroller
-              title={"Your Repositories"}
-              repos={userRepos}
-              onClick={onClick}
-            />
-          )}
-          <HorizontalScroller
-            title={"Explore popular repositories"}
-            repos={popularRepos}
-            onClick={onClick}
-          />
+          <TopNavBar />
+          <Container>
+            <div>
+              <Row>
+                <Col md={{ span: 6, offset: 3 }}>
+                  <SearchBar searchHandler={handleSearch} />
+                </Col>
+              </Row>
+
+              {userRepos.length > 0 && (
+                <HorizontalScroller
+                  title={"Your Repositories"}
+                  repos={userRepos}
+                  onClick={onClick}
+                />
+              )}
+              <HorizontalScroller
+                title={"Explore popular repositories"}
+                repos={popularRepos}
+                onClick={onClick}
+              />
+            </div>
+          </Container>
         </div>
       )}
-    </Container>
+    </div>
   );
 };
 
@@ -91,6 +121,15 @@ const mapDispatchToProps = (
   },
   getUserRepos: () => {
     dispatch(getUserRepositoriesAction());
+  },
+  performSearch: (query: string) => {
+    dispatch(getRepositoriesFromSearchAction(query));
+  },
+  setQueryText: (query: string) => {
+    dispatch(setQueryTextAction(query));
+  },
+  setIsSearching: () => {
+    dispatch(setSearchInProgressStatusAction(true));
   }
 });
 

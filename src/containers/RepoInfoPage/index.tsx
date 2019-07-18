@@ -24,7 +24,8 @@ import { getTimeSpanStartDate } from "../../utils/getTimeSpanStartDate";
 import PullRequestPage from "../PullRequestPage";
 import IssuesPage from "../IssuesPage";
 import ComparePage from "../ComparePage";
-let Spinner = require("react-spinkit");
+import TopNavBar from "../../components/TopNavBar";
+const Spinner = require("react-spinkit");
 
 interface IProps extends RouteComponentProps {}
 interface IStateProps {
@@ -98,7 +99,6 @@ const RepoInfoPage: React.FC<Props> = props => {
 
   useEffect(() => {
     if (doneLoading) {
-      const now = new Date();
       let numberOfIssuesOpened = 0;
       let numberOfIssuesClosed = 0;
       let numberOfPrsOpened = 0;
@@ -159,65 +159,68 @@ const RepoInfoPage: React.FC<Props> = props => {
   );
 
   return (
-    <Tabs defaultActiveKey="overview" id="repo-tabs">
-      <Tab eventKey="repo" title={`${author}/${name}`} disabled />
+    <>
+      <TopNavBar />
+      <Tabs defaultActiveKey="overview" id="repo-tabs">
+        <Tab eventKey="repo" title={`${author}/${name}`} disabled />
 
-      <Tab eventKey="overview" title="Overview">
-        {withLoading(
-          <OverviewPage
-            issuesOpened={issuesOpened}
-            issuesClosed={issuesClosed}
-            prsOpened={prsOpened}
-            prsMerged={prsMerged}
-            commitsMade={commitsMade}
-            linesAdded={linesAdded}
-            linesDeleted={linesDeleted}
-          />,
-          doneLoading
-        )}
-      </Tab>
+        <Tab eventKey="overview" title="Overview">
+          {withLoading(
+            <OverviewPage
+              issuesOpened={issuesOpened}
+              issuesClosed={issuesClosed}
+              prsOpened={prsOpened}
+              prsMerged={prsMerged}
+              commitsMade={commitsMade}
+              linesAdded={linesAdded}
+              linesDeleted={linesDeleted}
+            />,
+            doneLoading
+          )}
+        </Tab>
 
-      <Tab eventKey="issues" title="Issues">
-        {withLoading(
-          <IssuesPage
-            issues={issues}
-            issuesClosed={issuesClosed}
-            issuesOpened={issuesOpened}
-          />,
-          doneLoading
-        )}
-      </Tab>
+        <Tab eventKey="issues" title="Issues">
+          {withLoading(
+            <IssuesPage
+              issues={issues}
+              issuesClosed={issuesClosed}
+              issuesOpened={issuesOpened}
+            />,
+            doneLoading
+          )}
+        </Tab>
 
-      <Tab eventKey="prs" title="Pull Requests">
-        {withLoading(
-          <PullRequestPage
-            prs={prs}
-            prsMerged={prsMerged}
-            prsOpened={prsOpened}
-          />,
-          doneLoading
-        )}
-      </Tab>
+        <Tab eventKey="prs" title="Pull Requests">
+          {withLoading(
+            <PullRequestPage
+              prs={prs}
+              prsMerged={prsMerged}
+              prsOpened={prsOpened}
+            />,
+            doneLoading
+          )}
+        </Tab>
 
-      <Tab eventKey="commits" title="Commits">
-        {withLoading(
-          <CommitsPage
-            commits={commits}
-            commitsMade={commitsMade}
-            linesAdded={linesAdded}
-            linesDeleted={linesDeleted}
-          />,
-          doneLoading
-        )}
-      </Tab>
+        <Tab eventKey="commits" title="Commits">
+          {withLoading(
+            <CommitsPage
+              commits={commits}
+              commitsMade={commitsMade}
+              linesAdded={linesAdded}
+              linesDeleted={linesDeleted}
+            />,
+            doneLoading
+          )}
+        </Tab>
 
-      <Tab eventKey="compare" title="Compare Users">
-        {withLoading(
-          <ComparePage commits={commits} issues={issues} prs={prs} />,
-          doneLoading
-        )}
-      </Tab>
-    </Tabs>
+        <Tab eventKey="compare" title="Compare Users">
+          {withLoading(
+            <ComparePage commits={commits} issues={issues} prs={prs} />,
+            doneLoading
+          )}
+        </Tab>
+      </Tabs>
+    </>
   );
 };
 
