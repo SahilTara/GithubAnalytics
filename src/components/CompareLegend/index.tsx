@@ -49,8 +49,7 @@ const CompareLegend: React.FC<IProps> = ({
   const LegendElement = (value: any) => {
     const [show, showPicker] = useState(false);
     const [chosenColor, chooseColor] = useState(value.value.color);
-    const [disabled, disable] = useState(false);
-
+    const { disabled } = value.value;
     const clickPicker = (e: any) => {
       showPicker(!show);
       e.stopPropagation();
@@ -67,24 +66,9 @@ const CompareLegend: React.FC<IProps> = ({
     };
 
     return disabled ? (
-      <div
-        onClick={() => {
-          disable(true);
-          console.log("greyed out");
-          console.log(disabled);
-        }}
-        style={{ color: "grey" }}
-      >
-        {value.value.title}
-      </div>
+      <div style={{ color: "grey" }}>{value.value.title}</div>
     ) : (
-      <div
-        onClick={() => {
-          disable(true);
-          console.log("ALIVE");
-          console.log(disabled);
-        }}
-      >
+      <div>
         {value.value.title}
         <Button
           size="sm"
