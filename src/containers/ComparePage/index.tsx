@@ -80,6 +80,8 @@ const ComparePage: React.FC<Props> = props => {
 
   const [users, setUsers] = useState(usersInitial);
 
+  const [colors, setColors] = useState<string[]>([]);
+
   useEffect(() => {
     const timeToCompareTo = getTimeSpanStartDate(timeSpan);
     setCommitsTotal(getCommitsTotalData(commits, timeToCompareTo));
@@ -100,6 +102,10 @@ const ComparePage: React.FC<Props> = props => {
       }
     });
     setUsers(newUsers);
+    const colors = [...users].map(user => {
+      return user.color;
+    });
+    setColors(colors);
   };
   return (
     <Container>
@@ -114,14 +120,15 @@ const ComparePage: React.FC<Props> = props => {
                 xAxisLabel={"Username"}
                 yAxisLabel={"Issues"}
                 width={800}
+                colors={users}
               />
-
               <NumberVsTextBarGraph
                 title={"Compare Pull Requests"}
                 data={prsTotal}
                 xAxisLabel={"Username"}
                 yAxisLabel={"Pull Requests"}
                 width={800}
+                colors={users}
               />
               <NumberVsTextBarGraph
                 title={"Compare Commits"}
@@ -129,6 +136,7 @@ const ComparePage: React.FC<Props> = props => {
                 xAxisLabel={"Username"}
                 yAxisLabel={"Commits"}
                 width={800}
+                colors={users}
               />
             </Col>
           ) : (
@@ -151,6 +159,7 @@ const ComparePage: React.FC<Props> = props => {
                 legend={false}
                 width={800}
                 timeSpan={timeSpan}
+                colors={users}
               />
               <NumberVsTimeMultiLineGraph
                 title={"Compare Commits"}
@@ -160,6 +169,7 @@ const ComparePage: React.FC<Props> = props => {
                 legend={false}
                 width={800}
                 timeSpan={timeSpan}
+                colors={users}
               />
             </Col>
           )}

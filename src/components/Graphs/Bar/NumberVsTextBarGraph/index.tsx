@@ -13,6 +13,7 @@ import ITextBarGraphData from "../../../../types/IGraphData/ITextBarGraphData";
 import classNames from "classnames";
 import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
+import IUserColor from "../../../../types/IUserColor";
 
 // takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
@@ -22,6 +23,7 @@ interface IProps {
   xAxisLabel: string;
   yAxisLabel: string;
   width?: number;
+  colors: IUserColor[];
 }
 
 const NumberVsTextBarGraph: React.FC<IProps> = ({
@@ -29,7 +31,8 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
   data,
   xAxisLabel,
   yAxisLabel,
-  width
+  width,
+  colors
 }) => {
   let maxY = 0,
     minY = +Infinity;
@@ -46,6 +49,9 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
       minY = item.y;
     }
   });
+
+  // const dataWithColor = data.map((d, i) => ({ ...d, color: colors[i].color }));
+  // console.log(dataWithColor);
 
   const yInterval = Math.ceil((maxY * 1.1) / 4);
   const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
@@ -104,7 +110,7 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
             textAnchor: "end"
           }}
         />
-
+        {/* <SimpleChartWrapper colorRange={colors} /> */}
         <VerticalBarSeries
           data={data}
           onValueMouseOver={datapoint => mouseOver(datapoint)}
