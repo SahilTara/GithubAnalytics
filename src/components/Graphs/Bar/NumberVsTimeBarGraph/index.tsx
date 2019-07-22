@@ -12,7 +12,7 @@ import {
 } from "react-vis";
 import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
 import classNames from "classnames";
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 import { TIME_SPAN } from "../../../../types/TimeSpan";
 import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";

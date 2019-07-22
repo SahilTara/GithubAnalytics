@@ -23,6 +23,7 @@ import { ICommitData } from "../../types/ICommitData";
 import { getTimeSpanStartDate } from "../../utils/getTimeSpanStartDate";
 import PullRequestPage from "../PullRequestPage";
 import IssuesPage from "../IssuesPage";
+import ComparePage from "../ComparePage";
 import TopNavBar from "../../components/TopNavBar";
 const Spinner = require("react-spinkit");
 
@@ -208,6 +209,13 @@ const RepoInfoPage: React.FC<Props> = props => {
               linesAdded={linesAdded}
               linesDeleted={linesDeleted}
             />,
+            doneLoading
+          )}
+        </Tab>
+
+        <Tab eventKey="compare" title="Compare Users">
+          {withLoading(
+            <ComparePage commits={commits} issues={issues} prs={prs} />,
             doneLoading
           )}
         </Tab>

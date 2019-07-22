@@ -16,6 +16,7 @@ import "./style.css";
 import { TIME_SPAN } from "../../../../types/TimeSpan";
 import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
 import { getTimeBounds } from "../../../../utils/getTimeBounds";
+import IUserColor from "../../../../types/IUserColor";
 
 // takes in a title, a category, a list of {x, y, style?},
 // and a maximum results to display (remaining are added to Other)
@@ -23,10 +24,13 @@ import { getTimeBounds } from "../../../../utils/getTimeBounds";
 interface IProps {
   title: string;
   data: IBarGraphData[][];
-  lineLabels: string[];
+  lineLabels?: string[];
+  timeSpan?: TIME_SPAN;
   xAxisLabel: string;
   yAxisLabel: string;
   legend?: boolean;
+  width?: number;
+  colors?: IUserColor[];
 }
 
 const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
@@ -35,7 +39,9 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   lineLabels,
   xAxisLabel,
   yAxisLabel,
-  legend
+  legend,
+  width,
+  colors
 }) => {
   let minX = +Infinity,
     maxX = 0,
@@ -73,6 +79,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
 
   const startDateAsTime = startDate.getTime();
   const endDateAsTime = endDate.getTime();
+  console.log("color " + JSON.stringify(colors));
 
   const mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
     setState({ value: true });
@@ -101,7 +108,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   return (
     <Card style={{ marginRight: "-10px", marginBottom: "20px" }}>
       <h2 style={{ paddingTop: "20px" }}>{title}</h2>
-      {legend ? (
+      {legend && lineLabels ? (
         <DiscreteColorLegend orientation="horizontal" items={lineLabels} />
       ) : null}
       <XYPlot
@@ -109,7 +116,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         yDomain={[0, yTicks[4]]}
         xType="time"
         height={300}
-        width={500}
+        width={width ? width : 500}
         margin={{ left: 80, right: 50, bottom: 80 }}
       >
         <VerticalGridLines />
@@ -138,12 +145,17 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
             textAnchor: "end"
           }}
         />
-        {theData.map((subData: MarkSeriesPoint[]) => {
+        {theData.map((subData: MarkSeriesPoint[], index) => {
           return (
             <LineMarkSeries
               data={subData}
               onValueMouseOver={(datapoint, event) =>
                 mouseOver(datapoint, event)
+              }
+              color={
+                colors !== undefined && colors[index] !== undefined
+                  ? colors[index].color
+                  : undefined
               }
             />
           );
@@ -152,9 +164,13 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
 
       {state.value ? (
         <div style={{ height: "4rem" }}>{tooltip}</div>
-      ) : (
+      ) : theData && theData.length > 0 ? (
         <div style={{ height: "4rem" }}>
           Hover over a data point for more information.
+        </div>
+      ) : (
+        <div style={{ height: "4rem" }}>
+          No information was retrieved in this time range.
         </div>
       )}
     </Card>
