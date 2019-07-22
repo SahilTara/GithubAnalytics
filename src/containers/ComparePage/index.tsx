@@ -102,7 +102,7 @@ const ComparePage: React.FC<Props> = props => {
       }
     });
     setUsers(newUsers);
-    const colors = [...users].map(user => {
+    const colors = [...newUsers].map(user => {
       return user.color;
     });
     setColors(colors);

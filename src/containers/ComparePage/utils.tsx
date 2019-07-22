@@ -55,6 +55,8 @@ const getUsers = (
     });
   });
 
+  console.log(userData);
+
   return userData;
 };
 

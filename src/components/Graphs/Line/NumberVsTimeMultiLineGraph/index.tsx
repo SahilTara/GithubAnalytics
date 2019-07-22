@@ -152,7 +152,11 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
               onValueMouseOver={(datapoint, event) =>
                 mouseOver(datapoint, event)
               }
-              color={colors ? colors[index].color : undefined}
+              color={
+                colors !== undefined && colors[index] !== undefined
+                  ? colors[index].color
+                  : undefined
+              }
             />
           );
         })}
