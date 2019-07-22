@@ -5,6 +5,11 @@ export interface ISetSearchInProgressStatusActionType {
   payload: boolean;
 }
 
+/**
+ * Sets the Searching status within the redux store.
+ * @param isSearching  Searching status to set inside the redux store.
+ * @function
+ */
 export const setSearchInProgressStatusAction = (
   isSearching: boolean
 ): ISetSearchInProgressStatusActionType => {

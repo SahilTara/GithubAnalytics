@@ -5,6 +5,11 @@ export interface ISetLastQueryTextActionType {
   payload: string;
 }
 
+/**
+ * Sets the last queried string in the redux store
+ * @param lastQuery the query string to set inside the redux store.
+ * @function
+ */
 export const setQueryTextAction = (
   lastQuery: string
 ): ISetLastQueryTextActionType => {

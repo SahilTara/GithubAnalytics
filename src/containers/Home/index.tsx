@@ -35,20 +35,21 @@ interface IDispatchProps {
 }
 
 type Props = IStateProps & IDispatchProps & IProps;
-const Home: React.FC<Props> = props => {
-  const {
-    popularRepos,
-    userRepos,
-    getUserRepos,
-    getPopularRepos,
-    history,
-    setCurrentRepo,
-    isLoggedIn,
-    performSearch,
-    setIsSearching,
-    setQueryText
-  } = props;
-
+/**
+ * Home page that displays user repos or login page.
+ */
+const Home: React.FC<Props> = ({
+  popularRepos,
+  userRepos,
+  getUserRepos,
+  getPopularRepos,
+  history,
+  setCurrentRepo,
+  isLoggedIn,
+  performSearch,
+  setIsSearching,
+  setQueryText
+}) => {
   const onClick = (repository: IRepository) => {
     setCurrentRepo(repository);
     history.push("/repo");

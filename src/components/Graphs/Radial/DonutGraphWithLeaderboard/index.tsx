@@ -1,48 +1,73 @@
 import React, { useState } from "react";
 import { Card, Row, Col } from "react-bootstrap";
-import {
-  RadialChart,
-  RadialChartProps,
-  RadialChartPoint,
-  Hint
-} from "react-vis";
+import { RadialChart, RadialChartProps, RadialChartPoint } from "react-vis";
 import IDonutGraphData from "../../../../types/IGraphData/IDonutGraphData";
 import styles from "./styles.module.css";
 import classNames from "classnames";
 
-// takes in a title, a category, a list of {label, value, style?},
-// and a maximum results to display (remaining are added to Other)
 interface IProps {
+  /**
+   * Title for Donut Graph
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+  /**
+   * Category title for the values of the data
+   * Used in leaderboard underneath the donut chart.
+   * @type {string}
+   * @memberof IProps
+   */
   category: string;
+
+  /**
+   * Data for the donut graph
+   *
+   * @type {IDonutGraphData[]}
+   * @memberof IProps
+   */
   data: IDonutGraphData[];
+
+  /**
+   * Maximum number of unique elements to display,
+   * all other elements are categorized under 'Other'
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   maximum?: number;
 }
 
-interface ITooltip {
-  User: string | undefined;
-}
-
+/**
+ * Component for a donut graph with a leaderboard.
+ */
 const DonutGraphWithLeaderboard: React.FC<IProps> = ({
   title,
   category,
   data,
   maximum
 }) => {
-  const [state, setState] = useState({ value: false });
-  const [tooltip, setTooltip] = useState<ITooltip>({ User: "" });
+  const [showingValue, setShowingValue] = useState(false);
+  const [tooltip, setTooltip] = useState("");
   let theData: RadialChartProps["data"] = [];
-  let sum = 0,
-    topMax = 0;
+  let topMax = 0;
   let max = maximum ? maximum : data.length;
 
   // sort data in descending order
   data.sort((a, b) => {
     return b.value - a.value;
   });
-  data.forEach((item: IDonutGraphData) => {
-    sum += item.value;
-  });
+
+  const sum = data.reduce((sumSoFar: number, item: IDonutGraphData) => {
+    return sumSoFar + item.value;
+  }, 0);
+
+  /*
+   * Creates the list of data objects, each with a value and a label.
+   * The value is used in the donut graph, and the label is displayed on hover
+   * The topMax is the sum of the top max items values, used to determine the Other count
+   */
   data.slice(0, max).forEach((item: IDonutGraphData) => {
     theData.push({
       angle: item.value,
@@ -75,10 +100,9 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({
   }
 
   let mouseOver = (datapoint: RadialChartPoint) => {
-    setState({ value: true });
-    setTooltip({ User: datapoint.label });
+    setShowingValue(true);
+    setTooltip(datapoint.label || "");
   };
-  console.log({ donut: theData });
   return (
     <div>
       <Card style={{ marginBottom: "20px" }}>
@@ -98,9 +122,9 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({
             onValueMouseOver={datapoint => mouseOver(datapoint)}
           />
         </div>
-        {state.value ? (
+        {showingValue ? (
           <div className={classNames(styles.tooltip_box)}>
-            {"User: " + tooltip.User}
+            {"User: " + tooltip}
           </div>
         ) : (
           <div className={classNames(styles.tooltip_box)}>

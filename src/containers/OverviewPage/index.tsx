@@ -11,12 +11,60 @@ import { Dispatch } from "redux";
 import { setTimeSpanAction } from "../../actions/repositoryInfoActions/setTimeSpan";
 
 interface IProps {
+  /**
+   * Total number of issues opened
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   issuesOpened: number;
+
+  /**
+   * Total number of issues closed
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   issuesClosed: number;
+
+  /**
+   * Total number of PRs opened
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   prsOpened: number;
+
+  /**
+   * Total number of PRs merged
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   prsMerged: number;
+
+  /**
+   * Total number of commits made
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   commitsMade: number;
+
+  /**
+   * Total number of lines added
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   linesAdded: number;
+
+  /**
+   * Total number of lines deleted
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   linesDeleted: number;
 }
 
@@ -30,24 +78,25 @@ interface IDispatchProps {
 
 type Props = IProps & IStateProps & IDispatchProps;
 
-const OverviewPage: React.FC<Props> = props => {
+/**
+ * Page for viewing brief overview of stats.
+ */
+const OverviewPage: React.FC<Props> = ({
+  issuesOpened,
+  issuesClosed,
+  prsOpened,
+  prsMerged,
+  commitsMade,
+  linesAdded,
+  linesDeleted,
+  timeSpan,
+  setTimeSpan
+}) => {
   const timeSpans = [
     TIME_SPAN.LAST_7_DAYS,
     TIME_SPAN.LAST_MONTH,
     TIME_SPAN.LAST_YEAR
   ];
-
-  const {
-    issuesOpened,
-    issuesClosed,
-    prsOpened,
-    prsMerged,
-    commitsMade,
-    linesAdded,
-    linesDeleted,
-    timeSpan,
-    setTimeSpan
-  } = props;
 
   const selectTimeSpan = (key: string) => {
     setTimeSpan(key as TIME_SPAN);
@@ -56,6 +105,7 @@ const OverviewPage: React.FC<Props> = props => {
   return (
     <Container>
       <div style={{ paddingTop: "20px" }}>
+        {/* Timespan Selector */}
         <Row style={{ paddingBottom: "20px" }}>
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
@@ -67,8 +117,10 @@ const OverviewPage: React.FC<Props> = props => {
             />
           </Col>
         </Row>
+        {/* Main Content */}
         <Row>
           <Col>
+            {/* Summary Cards */}
             <Row>
               <Col>
                 <SummaryCard

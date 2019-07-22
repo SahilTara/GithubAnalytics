@@ -3,6 +3,10 @@ import dashboardInfo from "./dashboardInfoReducers";
 import repositoryInfo from "./repositoryInfoReducers";
 import environmentInfo from "./environmentInfoReducers";
 import searchInfo from "./searchInfoReducers";
+
+/**
+ * Application Wide Root Reducer
+ */
 const rootReducer = combineReducers({
   dashboardInfo,
   searchInfo,

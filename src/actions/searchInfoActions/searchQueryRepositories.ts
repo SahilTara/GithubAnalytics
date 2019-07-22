@@ -10,6 +10,11 @@ export interface IGetRepositoriesFromSearchActionType {
   payload: IRepository[];
 }
 
+/**
+ * Puts repositories related to a query into the redux store.
+ * @param query the query used to find repositories
+ * @function
+ */
 export const getRepositoriesFromSearchAction = (query: string) => {
   return async (dispatch: Dispatch<DashboardInfoActionType>) => {
     const api = new GithubApiService();

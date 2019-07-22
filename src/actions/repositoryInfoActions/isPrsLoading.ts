@@ -5,6 +5,11 @@ export interface ISetPrsLoadingStatusActionType {
   payload: boolean;
 }
 
+/**
+ * Sets the  PR loading status within the redux store.
+ * @param isLoading  PR loading status to set inside the redux store.
+ * @function
+ */
 export const setPrsLoadingStatusAction = (
   isLoading: boolean
 ): ISetPrsLoadingStatusActionType => {

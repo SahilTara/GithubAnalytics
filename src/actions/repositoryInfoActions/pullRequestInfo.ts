@@ -11,6 +11,11 @@ export interface IGetPullRequestInfoActionType {
   payload: IPullRequest[];
 }
 
+/**
+ * Puts pull request related info for the specified repository into the redux store.
+ * @param repository the repository for which the pull request info is needed.
+ * @function
+ */
 export const getPullRequestInfoAction = (repository: IRepository) => {
   return async (dispatch: Dispatch<RepositoryInfoActionType>) => {
     const api = new GithubApiService();

@@ -13,26 +13,78 @@ import {
 import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
 import { Card } from "react-bootstrap";
 import "./style.css";
-import { TIME_SPAN } from "../../../../types/TimeSpan";
-import { getTimeSpanStartDate } from "../../../../utils/getTimeSpanStartDate";
 import { getTimeBounds } from "../../../../utils/getTimeBounds";
 import IUserColor from "../../../../types/IUserColor";
 
-// takes in a title, a category, a list of {x, y, style?},
-// and a maximum results to display (remaining are added to Other)
-// x is time in ms
 interface IProps {
+  /**
+   * Title of the multi-line graph
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+
+  /**
+   * Data for the multi-line graph
+   *
+   * @type {IBarGraphData[][]}
+   * @memberof IProps
+   */
   data: IBarGraphData[][];
+
+  /**
+   * Label for each line in the multi-line graph
+   *
+   * @type {string[]}
+   * @memberof IProps
+   */
   lineLabels?: string[];
-  timeSpan?: TIME_SPAN;
+
+  /**
+   * label for the x axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   xAxisLabel: string;
+
+  /**
+   * Label for the y axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   yAxisLabel: string;
+
+  /**
+   * Should there be a corresponding legend
+   *
+   * @type {boolean}
+   * @memberof IProps
+   */
   legend?: boolean;
+
+  /**
+   * Width for the line graph
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   width?: number;
+
+  /**
+   * User names with color and disable info
+   *
+   * @type {IUserColor[]}
+   * @memberof IProps
+   */
   colors?: IUserColor[];
 }
 
+/**
+ * Component for a Number Vs Time Line Graph with multiple lines and Hover info
+ */
 const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
   title,
   data,
@@ -47,7 +99,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     maxX = 0,
     maxY = 0,
     minY = +Infinity;
-  const [state, setState] = useState({ value: false });
+  const [showingValue, setShowingValue] = useState(false);
   const [tooltip, setTooltip] = useState({});
 
   const theData = data.map(subdata => subdata.slice());
@@ -79,10 +131,9 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
 
   const startDateAsTime = startDate.getTime();
   const endDateAsTime = endDate.getTime();
-  console.log("color " + JSON.stringify(colors));
 
   const mouseOver = (datapoint: MarkSeriesPoint, event: any) => {
-    setState({ value: true });
+    setShowingValue(true);
     setTooltip(
       "Date: " +
         new Date(datapoint.x).toDateString() +
@@ -100,7 +151,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
     if (endDateAsTime - startDateAsTime < sixMonths) {
       dateTick = date[1] + " " + date[2];
     } else {
-      dateTick = date[2] + " " + date[3];
+      dateTick = date[1] + " " + date[3];
     }
     return dateTick;
   };
@@ -162,7 +213,7 @@ const NumberVsTimeMultiLineGraph: React.FC<IProps> = ({
         })}
       </XYPlot>
 
-      {state.value ? (
+      {showingValue ? (
         <div style={{ height: "4rem" }}>{tooltip}</div>
       ) : theData && theData.length > 0 ? (
         <div style={{ height: "4rem" }}>

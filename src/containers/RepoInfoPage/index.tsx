@@ -49,24 +49,26 @@ interface IDispatchProps {
 
 type Props = IStateProps & IProps & IDispatchProps;
 
-const RepoInfoPage: React.FC<Props> = props => {
-  const {
-    history,
-    repo,
-    getPullRequests,
-    getIssues,
-    getCommits,
-    prs,
-    issues,
-    commits,
-    timeSpan,
-    isPrsLoading,
-    isCommitsLoading,
-    isIssuesLoading,
-    setIssuesLoading,
-    setCommitsLoading,
-    setPrsLoading
-  } = props;
+/**
+ * Page that contains many sub pages of detailed info about a repository.
+ */
+const RepoInfoPage: React.FC<Props> = ({
+  history,
+  repo,
+  getPullRequests,
+  getIssues,
+  getCommits,
+  prs,
+  issues,
+  commits,
+  timeSpan,
+  isPrsLoading,
+  isCommitsLoading,
+  isIssuesLoading,
+  setIssuesLoading,
+  setCommitsLoading,
+  setPrsLoading
+}) => {
   const { name, author } = repo;
 
   // Repo wasn't filled before reaching.

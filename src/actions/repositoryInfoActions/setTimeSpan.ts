@@ -6,6 +6,11 @@ export interface ISetTimeSpanActionType {
   payload: TIME_SPAN;
 }
 
+/**
+ * Sets the selected timespan in the redux store.
+ * @param timeSpan the time span to set inside the redux store.
+ * @function
+ */
 export const setTimeSpanAction = (
   timeSpan: TIME_SPAN
 ): ISetTimeSpanActionType => {

@@ -5,6 +5,11 @@ export interface ISetCommitsLoadingStatusActionType {
   payload: boolean;
 }
 
+/**
+ * Sets the Commit loading status within the redux store.
+ * @param isLoading  Commit loading status to set inside the redux store.
+ * @function
+ */
 export const setCommitsLoadingStatusAction = (
   isLoading: boolean
 ): ISetCommitsLoadingStatusActionType => {

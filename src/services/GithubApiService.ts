@@ -16,9 +16,20 @@ OctoKit.plugin(require("@octokit/plugin-throttling"));
 const trending_url =
   "https://github-trending-api.now.sh/repositories?since=weekly";
 
+/**
+ * Class which encapsulates various Github related api commands.
+ *
+ * @class GithubApiService
+ */
 class GithubApiService {
   private static octokit: OctoKit;
 
+  /**
+   * Sets the auth token, and creates a new instance of the octokit agent.
+   * @static
+   * @param {string} token token that is used for auth
+   * @memberof GithubApiService
+   */
   public static setToken(token: string) {
     GithubApiService.octokit = new OctoKit({
       auth: token,
@@ -52,11 +63,25 @@ class GithubApiService {
     });
   }
 
+  /**
+   * Gets the URL needed for authentication
+   *
+   * @static
+   * @returns {string} auth url
+   * @memberof GithubApiService
+   */
   public static getAuthUrl(): string {
     const clientId = process.env.REACT_APP_CLIENT_ID || "";
     return `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo`;
   }
 
+  /**
+   * Gets a list of trending repositories asynchronously.
+   *
+   * @param {number} [top=20] Gets the top n trending repositories for the week (default top 20)
+   * @returns {Promise<IRepository[]>} A promise containing a list of trending repositories
+   * @memberof GithubApiService
+   */
   public async getPopularRepositories(
     top: number = 20
   ): Promise<IRepository[]> {
@@ -68,7 +93,16 @@ class GithubApiService {
     return repositories.slice(0, top);
   }
 
-  public async getPullRequests(repository: IRepository) {
+  /**
+   * Gets pull request info for a repository asynchronously
+   *
+   * @param {IRepository} repository repository to get pull request info for.
+   * @returns {Promise<IPullRequest[]>} A promise containing pull request info for a repository
+   * @memberof GithubApiService
+   */
+  public async getPullRequests(
+    repository: IRepository
+  ): Promise<IPullRequest[]> {
     const options = GithubApiService.octokit.pulls.list.endpoint.merge({
       owner: repository.author,
       repo: repository.name,
@@ -88,6 +122,13 @@ class GithubApiService {
       );
   }
 
+  /**
+   * Gets the date one year ago
+   *
+   * @private
+   * @returns {Date} Date one year ago
+   * @memberof GithubApiService
+   */
   private getOneYearAgo(): Date {
     const now = new Date();
     const oneYearAgo = new Date();
@@ -103,6 +144,13 @@ class GithubApiService {
     return oneYearAgo;
   }
 
+  /**
+   * Gets commit info for a repository asynchronously
+   *
+   * @param {IRepository} repository repository to get commit info for.
+   * @returns {Promise<ICommitData[]>} A promise containing commit info for a repository
+   * @memberof GithubApiService
+   */
   public async getCommits(repository: IRepository): Promise<ICommitData[]> {
     const oneYearAgo = this.getOneYearAgo();
 
@@ -142,7 +190,14 @@ class GithubApiService {
       .then(promises => Promise.all(promises));
   }
 
-  public async search(query: string) {
+  /**
+   * Gets a list of repositories related to a query asynchronously
+   *
+   * @param {string} query a query string to find repositories for.
+   * @returns {Promise<IRepository[]>} A list of repositories related to the query
+   * @memberof GithubApiService
+   */
+  public async search(query: string): Promise<IRepository[]> {
     return await GithubApiService.octokit.search
       .repos({ q: query, per_page: 30 })
       .then(response =>
@@ -162,6 +217,13 @@ class GithubApiService {
       );
   }
 
+  /**
+   * Gets issue info for a repository asynchronously
+   *
+   * @param {IRepository} repository repository to get issue info for.
+   * @returns {Promise<IIssueData[]>} A promise containing issue info for a repository
+   * @memberof GithubApiService
+   */
   public async getIssues(repository: IRepository): Promise<IIssueData[]> {
     const oneYearAgo = this.getOneYearAgo();
 
@@ -213,7 +275,13 @@ class GithubApiService {
       )
       .then(async promises => await Promise.all(promises));
   }
-  public async getUserRepos() {
+  /**
+   * Gets a list of up to 100 of the authenticated user's repositories asynchronously
+   *
+   * @returns {Promise<IRepository[]>} A promise containing a list of up to 100 of the user's repositories
+   * @memberof GithubApiService
+   */
+  public async getUserRepos(): Promise<IRepository[]> {
     return await GithubApiService.octokit.repos
       .list({ per_page: 100 })
       .then(response => Promise.resolve(response.data as ReposGetResponse[]))

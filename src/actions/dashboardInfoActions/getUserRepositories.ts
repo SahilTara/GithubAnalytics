@@ -9,6 +9,10 @@ export interface IGetUserRepositoriesActionType {
   payload: IRepository[];
 }
 
+/**
+ * Action for getting user's repositories into the redux store via the github api.
+ * @function
+ */
 export const getUserRepositoriesAction = () => {
   return async (dispatch: Dispatch<DashboardInfoActionType>) => {
     const api = new GithubApiService();

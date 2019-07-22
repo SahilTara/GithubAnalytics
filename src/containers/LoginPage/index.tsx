@@ -18,11 +18,13 @@ interface IDispatchProps {
 
 type Props = IProps & IDispatchProps;
 
-const LoginPage: React.FC<Props> = props => {
-  const { location, history, setLoggedIn } = props;
+/**
+ * Page that handles login sequence
+ */
+const LoginPage: React.FC<Props> = ({ location, history, setLoggedIn }) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  // Hacky auth
+  // Hacky auth, gets access token.
   useEffect(() => {
     const match = location.search.match(/\?code=(.*)/);
     if (match) {

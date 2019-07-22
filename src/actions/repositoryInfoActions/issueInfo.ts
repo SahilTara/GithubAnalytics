@@ -11,6 +11,11 @@ export interface IGetIssueInfoActionType {
   payload: IIssueData[];
 }
 
+/**
+ * Puts issue related info for the specified repository into the redux store.
+ * @param repository the repository for which the issue info is needed.
+ * @function
+ */
 export const getIssueInfoAction = (repository: IRepository) => {
   return async (dispatch: Dispatch<RepositoryInfoActionType>) => {
     const api = new GithubApiService();

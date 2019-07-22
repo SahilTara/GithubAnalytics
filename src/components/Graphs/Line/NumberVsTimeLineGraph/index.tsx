@@ -7,27 +7,52 @@ import {
   HorizontalGridLines,
   ChartLabel,
   MarkSeriesPoint,
-  LineMarkSeries,
-  FlexibleWidthXYPlot
+  LineMarkSeries
 } from "react-vis";
 import IBarGraphData from "../../../../types/IGraphData/IBarGraphData";
 import classNames from "classnames";
 import styles from "./styles.module.css";
 import { Card } from "react-bootstrap";
 import "./style.css";
-import { TIME_SPAN } from "../../../../types/TimeSpan";
 import { getTimeBounds } from "../../../../utils/getTimeBounds";
 
-// takes in a title, a category, a list of {x, y, style?},
-// and a maximum results to display (remaining are added to Other)
-// x is time in ms
 interface IProps {
+  /**
+   * Title of the line graph
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+
+  /**
+   * Data for the line graph
+   *
+   * @type {IBarGraphData[]}
+   * @memberof IProps
+   */
   data: IBarGraphData[];
+
+  /**
+   * label for the x axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   xAxisLabel: string;
+
+  /**
+   * Label for the y axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   yAxisLabel: string;
 }
 
+/**
+ * Component for a Number Vs Time Line Graph with Hover info
+ */
 const NumberVsTimeLineGraph: React.FC<IProps> = ({
   title,
   data,
@@ -38,7 +63,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({
     maxX = 0,
     maxY = 0,
     minY = +Infinity;
-  const [state, setState] = useState({ value: false });
+  const [showingValue, setShowingValue] = useState(false);
   const [tooltip, setTooltip] = useState({});
 
   const theData = [...data];
@@ -71,7 +96,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({
   const endDateAsTime = endDate.getTime();
 
   const mouseOver = (datapoint: MarkSeriesPoint) => {
-    setState({ value: true });
+    setShowingValue(true);
     setTooltip(
       "Date: " +
         new Date(datapoint.x).toDateString() +
@@ -89,7 +114,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({
     if (endDateAsTime - startDateAsTime < sixMonths) {
       dateTick = date[1] + " " + date[2];
     } else {
-      dateTick = date[2] + " " + date[3];
+      dateTick = date[1] + " " + date[3];
     }
     return dateTick;
   };
@@ -137,7 +162,7 @@ const NumberVsTimeLineGraph: React.FC<IProps> = ({
           onNearestX={datapoint => mouseOver(datapoint)}
         />
       </XYPlot>
-      {state.value ? (
+      {showingValue ? (
         <div className={classNames(styles.tooltip_box)}>{tooltip}</div>
       ) : (
         <div className={classNames(styles.tooltip_box)}>

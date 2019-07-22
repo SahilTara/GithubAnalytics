@@ -1,5 +1,9 @@
 import { TIME_SPAN } from "../types/TimeSpan";
 
+/**
+ * Gets the start date of the time span given a time span.
+ * @param timeSpan time span to get start date for.
+ */
 export const getTimeSpanStartDate = (timeSpan: TIME_SPAN) => {
   const now = new Date();
   let timeSpanStartDate: Date = new Date();

@@ -28,8 +28,28 @@ import styles from "./styles.module.css";
 import classNames from "classnames";
 
 interface IProps {
+  /**
+   * Total number of PRs Opened
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   prsOpened: number;
+
+  /**
+   * Total number of PRs merged
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   prsMerged: number;
+
+  /**
+   * PR data, which is used for graphing info on the page
+   *
+   * @type {IPullRequest[]}
+   * @memberof IProps
+   */
   prs: IPullRequest[];
 }
 
@@ -41,6 +61,7 @@ interface IDispatchProps {
   setTimeSpan: (timeSpan: TIME_SPAN) => any;
 }
 
+// initial states for PR page
 const prsOpenedLeaderboardInitial: IDonutGraphData[] = [];
 const prsMergedLeaderboardInitial: IDonutGraphData[] = [];
 
@@ -49,9 +70,16 @@ const openedPullRequestsOverTimeInitial: IBarGraphData[] = [];
 
 type Props = IProps & IStateProps & IDispatchProps;
 
-const PullRequestPage: React.FC<Props> = props => {
-  const { prs, prsOpened, prsMerged, timeSpan, setTimeSpan } = props;
-
+/**
+ * Page to show PR related info.
+ */
+const PullRequestPage: React.FC<Props> = ({
+  prs,
+  prsOpened,
+  prsMerged,
+  timeSpan,
+  setTimeSpan
+}) => {
   const timeSpans = [
     TIME_SPAN.LAST_7_DAYS,
     TIME_SPAN.LAST_MONTH,
@@ -102,6 +130,7 @@ const PullRequestPage: React.FC<Props> = props => {
         </h2>
       )}
       <div style={{ paddingTop: "20px" }}>
+        {/* Timespan Selector */}
         <Row style={{ paddingBottom: "20px" }}>
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
@@ -113,8 +142,10 @@ const PullRequestPage: React.FC<Props> = props => {
             />
           </Col>
         </Row>
+        {/* Main Content */}
         <Row>
           <Col>
+            {/* Summary Cards */}
             <Row>
               <Col>
                 <SummaryCard count={prsOpened} subtitle={"PRs Opened"} />
@@ -123,6 +154,7 @@ const PullRequestPage: React.FC<Props> = props => {
                 <SummaryCard count={prsMerged} subtitle={"PRs Merged"} />
               </Col>
             </Row>
+            {/* Graphs */}
             {averageTimeToMergePrs.length > 0 && (
               <NumberVsTimeLineGraph
                 title={"Average Time to Merge PRs (by create date)"}
@@ -141,6 +173,7 @@ const PullRequestPage: React.FC<Props> = props => {
             )}
           </Col>
           <Col>
+            {/* Leaderboard + Donut Graphs */}
             {prsMergedLeaderboard.length > 0 && (
               <DonutGraphWithLeaderboard
                 data={prsMergedLeaderboard}

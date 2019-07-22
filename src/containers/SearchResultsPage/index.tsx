@@ -34,6 +34,9 @@ interface IDispatchProps {
 
 type Props = IProps & IStateProps & IDispatchProps;
 
+/**
+ * Page that displays search query results.
+ */
 const SearchResultsPage: React.FC<Props> = ({
   history,
   repos,
