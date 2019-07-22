@@ -3,6 +3,12 @@ import IDonutGraphData from "../../types/IGraphData/IDonutGraphData";
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
 import { IIssueData } from "../../types/IIssueData";
 
+/**
+ * Gets data for opened issues leaderboard
+ * @param issues issue data to get opened issues leaderboard data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getOpenedIssuesLeaderboardData = (
   issues: IIssueData[],
   dateToCompare: Date
@@ -32,6 +38,12 @@ const getOpenedIssuesLeaderboardData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for closed issues leaderboard
+ * @param issues issue data to get closed issues leaderboard data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getClosedIssuesLeaderboardData = (
   issues: IIssueData[],
   dateToCompare: Date
@@ -63,6 +75,12 @@ const getClosedIssuesLeaderboardData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for opened issues over time graph
+ * @param issues issue data to get opened issues over time data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getOpenedIssuesOverTimeData = (
   issues: IIssueData[],
   dateToCompare: Date
@@ -96,6 +114,12 @@ const getOpenedIssuesOverTimeData = (
   return openedIssuesOverTimeGraphData;
 };
 
+/**
+ * Gets average time to close issues raw data
+ * @param issues issue data to get average time to close issues raw data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getAverageTimeToCloseIssuesDataRaw = (
   prs: IIssueData[],
   dateToCompare: Date
@@ -161,6 +185,12 @@ const getAverageTimeToCloseIssuesDataRaw = (
   return averageTimeToCloseIssuesGraphData;
 };
 
+/**
+ * Gets average time to close issues as hours data
+ * @param issues issue data to get average time to close issues as hours data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getAverageTimeToCloseIssuesAsHoursData = (
   issues: IIssueData[],
   dateToCompare: Date

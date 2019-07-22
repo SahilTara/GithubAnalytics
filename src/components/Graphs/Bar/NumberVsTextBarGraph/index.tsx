@@ -15,17 +15,59 @@ import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 import IUserColor from "../../../../types/IUserColor";
 
-// takes in a title, a category, a list of {x, y, style?},
-// and a maximum results to display (remaining are added to Other)
 interface IProps {
+  /**
+   * Title of the bar graph
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+
+  /**
+   * Data for the bar graph
+   *
+   * @type {ITextBarGraphData[]}
+   * @memberof IProps
+   */
   data: ITextBarGraphData[];
+
+  /**
+   * label for the x axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   xAxisLabel: string;
+
+  /**
+   * Label for the y axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   yAxisLabel: string;
+
+  /**
+   * Width for the bar graph
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   width?: number;
+
+  /**
+   * User names with color and disable info
+   *
+   * @type {IUserColor[]}
+   * @memberof IProps
+   */
   colors: IUserColor[];
 }
 
+/**
+ * Component for a Number Vs Text Bar Graph with Hover info
+ */
 const NumberVsTextBarGraph: React.FC<IProps> = ({
   title,
   data,
@@ -36,7 +78,7 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
 }) => {
   let maxY = 0,
     minY = +Infinity;
-  const [state, setState] = useState({ value: false });
+  const [showingValue, setShowingValue] = useState(false);
   const [tooltip, setTooltip] = useState({});
 
   const xTicks: string[] = [];
@@ -50,14 +92,11 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
     }
   });
 
-  // const dataWithColor = data.map((d, i) => ({ ...d, color: colors[i].color }));
-  // console.log(dataWithColor);
-
   const yInterval = Math.ceil((maxY * 1.1) / 4);
   const yTicks = [0, yInterval, yInterval * 2, yInterval * 3, yInterval * 4];
 
   let mouseOver = (datapoint: VerticalBarSeriesPoint) => {
-    setState({ value: true });
+    setShowingValue(true);
     setTooltip(
       xAxisLabel + ": " + datapoint.x + " • " + yAxisLabel + ": " + datapoint.y
     );
@@ -110,13 +149,13 @@ const NumberVsTextBarGraph: React.FC<IProps> = ({
             textAnchor: "end"
           }}
         />
-        {/* <SimpleChartWrapper colorRange={colors} /> */}
+        {}
         <VerticalBarSeries
           data={data}
           onValueMouseOver={datapoint => mouseOver(datapoint)}
         />
       </XYPlot>
-      {state.value ? (
+      {showingValue ? (
         <div className={classNames(styles.tooltip_box)}>{tooltip}</div>
       ) : data && data.length > 0 ? (
         <div style={{ height: "4rem" }}>

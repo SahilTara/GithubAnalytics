@@ -11,6 +11,11 @@ export interface IGetCommitInfoActionType {
   payload: ICommitData[];
 }
 
+/**
+ * Puts commit related info for the specified repository into the redux store.
+ * @param repository the repository for which the commit info is needed.
+ * @function
+ */
 export const getCommitInfoAction = (repository: IRepository) => {
   return async (dispatch: Dispatch<RepositoryInfoActionType>) => {
     const api = new GithubApiService();

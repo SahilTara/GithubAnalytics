@@ -3,8 +3,11 @@ import { Nav } from "react-bootstrap";
 import "./index.css";
 import { withRouter } from "react-router";
 
+/**
+ * Top Nav Component with Home Button that goes to the
+ * root location of the website
+ */
 const TopNavBar: React.FC = () => {
-  // Link that goes back to previous page
   const Home = withRouter(({ history }) => (
     <Nav.Link
       variant="outline-primary"

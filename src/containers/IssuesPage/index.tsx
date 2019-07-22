@@ -28,8 +28,26 @@ import classNames from "classnames";
 import { IIssueData } from "../../types/IIssueData";
 
 interface IProps {
+  /**
+   * Total number of issues closed
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   issuesClosed: number;
+  /**
+   * Total number of issues opened
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   issuesOpened: number;
+  /**
+   * Issue data, which is used for graphing info on the page
+   *
+   * @type {IIssueData[]}
+   * @memberof IProps
+   */
   issues: IIssueData[];
 }
 
@@ -41,6 +59,7 @@ interface IDispatchProps {
   setTimeSpan: (timeSpan: TIME_SPAN) => any;
 }
 
+// initial states for issues page
 const issuesOpenedLeaderboardInitial: IDonutGraphData[] = [];
 const issuesClosedLeaderboardInitial: IDonutGraphData[] = [];
 
@@ -49,9 +68,16 @@ const openedIssuesOverTimeInitial: IBarGraphData[] = [];
 
 type Props = IProps & IStateProps & IDispatchProps;
 
-const IssuesPage: React.FC<Props> = props => {
-  const { issues, issuesClosed, issuesOpened, timeSpan, setTimeSpan } = props;
-
+/**
+ * Page to show issue related info.
+ */
+const IssuesPage: React.FC<Props> = ({
+  issues,
+  issuesClosed,
+  issuesOpened,
+  timeSpan,
+  setTimeSpan
+}) => {
   const timeSpans = [
     TIME_SPAN.LAST_7_DAYS,
     TIME_SPAN.LAST_MONTH,
@@ -106,6 +132,7 @@ const IssuesPage: React.FC<Props> = props => {
         </h2>
       )}
       <div style={{ paddingTop: "20px" }}>
+        {/* Timespan Selector */}
         <Row style={{ paddingBottom: "20px" }}>
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
@@ -117,8 +144,10 @@ const IssuesPage: React.FC<Props> = props => {
             />
           </Col>
         </Row>
+        {/* Main Content */}
         <Row>
           <Col>
+            {/* Summary Cards */}
             <Row>
               <Col>
                 <SummaryCard count={issuesOpened} subtitle={"Issues Opened"} />
@@ -127,6 +156,7 @@ const IssuesPage: React.FC<Props> = props => {
                 <SummaryCard count={issuesClosed} subtitle={"Issues Closed"} />
               </Col>
             </Row>
+            {/* Graphs */}
             {averageTimeToCloseIssues.length > 0 && (
               <NumberVsTimeLineGraph
                 title={"Average Time to Close Issues (by create date)"}
@@ -144,7 +174,9 @@ const IssuesPage: React.FC<Props> = props => {
               />
             )}
           </Col>
+
           <Col>
+            {/* Leaderboard + Donut Graphs */}
             {issuesClosedLeaderboard.length > 0 && (
               <DonutGraphWithLeaderboard
                 data={issuesClosedLeaderboard}

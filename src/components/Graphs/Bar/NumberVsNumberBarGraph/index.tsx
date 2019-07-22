@@ -14,15 +14,43 @@ import classNames from "classnames";
 import styles from "../styles.module.css";
 import { Card } from "react-bootstrap";
 
-// takes in a title, a category, a list of {x, y, style?},
-// and a maximum results to display (remaining are added to Other)
 interface IProps {
+  /**
+   * Title of the bar graph
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+
+  /**
+   * Data for the bar graph
+   *
+   * @type {IBarGraphData[]}
+   * @memberof IProps
+   */
   data: IBarGraphData[];
+
+  /**
+   * label for the x axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   xAxisLabel: string;
+
+  /**
+   * Label for the y axis
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   yAxisLabel: string;
 }
 
+/**
+ * Component for a Number Vs Number Bar Graph with Hover info
+ */
 const NumberVsNumberBarGraph: React.FC<IProps> = ({
   title,
   data,
@@ -33,7 +61,7 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({
     minX = 0,
     maxY = 0,
     minY = +Infinity;
-  const [state, setState] = useState({ value: false });
+  const [showingValue, setShowingValue] = useState(false);
   const [tooltip, setTooltip] = useState({});
 
   data.forEach((item: { x: number; y: number }) => {
@@ -54,7 +82,7 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({
   const xTicks = [minX, xInterval, xInterval * 2, xInterval * 3, xInterval * 4];
 
   let mouseOver = (datapoint: VerticalBarSeriesPoint) => {
-    setState({ value: true });
+    setShowingValue(true);
     setTooltip(
       xAxisLabel + ": " + datapoint.x + " • " + yAxisLabel + ": " + datapoint.y
     );
@@ -100,7 +128,7 @@ const NumberVsNumberBarGraph: React.FC<IProps> = ({
           onValueMouseOver={datapoint => mouseOver(datapoint)}
         />
       </XYPlot>
-      {state.value ? (
+      {showingValue ? (
         <div className={classNames(styles.tooltip_box)}>{tooltip}</div>
       ) : (
         <div className={classNames(styles.tooltip_box)}>

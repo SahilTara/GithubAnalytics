@@ -4,6 +4,12 @@ import IDonutGraphData from "../../types/IGraphData/IDonutGraphData";
 
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
 
+/**
+ * Gets leaderboard data from commit data.
+ * @param commits commit data to get leaderboard data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getLeaderboardData = (
   commits: ICommitData[],
   dateToCompare: Date
@@ -32,6 +38,12 @@ const getLeaderboardData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for commits over time graph
+ * @param commits commit data to get commits over time data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getCommitsOverTimeData = (
   commits: ICommitData[],
   dateToCompare: Date
@@ -61,6 +73,12 @@ const getCommitsOverTimeData = (
   return commitsOverTimeGraphData;
 };
 
+/**
+ * Gets data for additions and deletions graph
+ * @param commits commit data to get addition and deletion data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getAdditionsAndDeletionsData = (
   commits: ICommitData[],
   dateToCompare: Date

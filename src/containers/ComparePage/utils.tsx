@@ -1,53 +1,58 @@
 import { ICommitData } from "../../types/ICommitData";
 
-import IDonutGraphData from "../../types/IGraphData/IDonutGraphData";
-
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
 import ITextBarGraphData from "../../types/IGraphData/ITextBarGraphData";
 import { IIssueData } from "../../types/IIssueData";
-import { array } from "prop-types";
 import IUserColor from "../../types/IUserColor";
 import { IPullRequest } from "../../types/IPullRequest";
 
+/**
+ * Gets users from various data sources, for use in legend, and graphs.
+ * @param commits the commit data to get users from
+ * @param prs the pr data to get users from
+ * @param issues the issue data to get users from
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ */
 const getUsers = (
   commits: ICommitData[],
   prs: IPullRequest[],
   issues: IIssueData[],
   dateToCompare: Date
 ): IUserColor[] => {
-  const leaderboardProcessedData: Map<string, number> = new Map();
+  const users: Set<string> = new Set();
   const userData: IUserColor[] = [];
+
+  // add all users who have a commit in the main branch of the repository
   commits.forEach(commit => {
     const { author, createdAt } = commit;
     const date = new Date(createdAt);
     date.setHours(0, 0, 0, 0);
-    if (date >= dateToCompare) {
-      const leaderboardCommitCount:
-        | number
-        | undefined = leaderboardProcessedData.get(author);
-      if (leaderboardCommitCount !== undefined) {
-        leaderboardProcessedData.set(author, leaderboardCommitCount + 1);
-      } else {
-        leaderboardProcessedData.set(author, 1);
-      }
+    if (date >= dateToCompare && !users.has(author)) {
+      users.add(author);
     }
   });
+
+  // add all users who created a pr
+  prs.forEach(pullRequest => {
+    const { owner, createdAt } = pullRequest;
+    const date = new Date(createdAt);
+    date.setHours(0, 0, 0, 0);
+    if (date >= dateToCompare && !users.has(owner)) {
+      users.add(owner);
+    }
+  });
+
+  // only count those users that closed issues
   issues.forEach(issue => {
     const { closedAt, closedBy, closed } = issue;
     const date = new Date(closedAt);
     date.setHours(0, 0, 0, 0);
-    if (date >= dateToCompare) {
-      const leaderboardCommitCount:
-        | number
-        | undefined = leaderboardProcessedData.get(closedBy);
-      if (leaderboardCommitCount !== undefined) {
-        leaderboardProcessedData.set(closedBy, leaderboardCommitCount + 1);
-      } else {
-        leaderboardProcessedData.set(closedBy, 1);
-      }
+
+    if (closed && date >= dateToCompare && !users.has(closedBy)) {
+      users.add(closedBy);
     }
   });
-  leaderboardProcessedData.forEach((value, key) => {
+  users.forEach(key => {
     userData.push({
       title: key,
       color: "#" + Math.floor(Math.random() * 16777215).toString(16),
@@ -55,11 +60,15 @@ const getUsers = (
     });
   });
 
-  console.log(userData);
-
   return userData;
 };
 
+/**
+ * Gets data for commits as total graph.
+ * @param commits commit data to get commits as total data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getCommitsTotalData = (
   commits: ICommitData[],
   dateToCompare: Date
@@ -88,6 +97,12 @@ const getCommitsTotalData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for commits over time graph.
+ * @param commits commit data to get commits over time data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getCommitsOverTimeData = (
   commits: ICommitData[],
   dateToCompare: Date
@@ -129,6 +144,12 @@ const getCommitsOverTimeData = (
   return commitsOverTimeGraphData;
 };
 
+/**
+ * Gets data for issues as total graph.
+ * @param issues issue data to get issues as total data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getIssuesTotalData = (
   issues: IIssueData[],
   dateToCompare: Date
@@ -160,6 +181,12 @@ const getIssuesTotalData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for issues over time graph.
+ * @param issues issues data to get issues over time data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getIssuesOverTimeData = (
   issues: IIssueData[],
   dateToCompare: Date
@@ -203,6 +230,12 @@ const getIssuesOverTimeData = (
   return issuesOverTimeGraphData;
 };
 
+/**
+ * Gets data for PRs as total graph.
+ * @param prs PR data to get PRs as total data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getPRsTotalData = (
   prs: IPullRequest[],
   dateToCompare: Date
@@ -232,6 +265,12 @@ const getPRsTotalData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for PRs over time graph.
+ * @param prs PR data to get PRs over time data for
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getPRsOverTimeData = (
   prs: IPullRequest[],
   dateToCompare: Date

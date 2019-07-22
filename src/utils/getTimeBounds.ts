@@ -1,5 +1,6 @@
 const oneDay = 86400000;
 const sevenDays = oneDay * 7;
+
 export const getTimeBounds = (startDate: Date, endDate: Date): [Date, Date] => {
   const diff = endDate.getTime() - startDate.getTime();
   if (diff >= sevenDays) {

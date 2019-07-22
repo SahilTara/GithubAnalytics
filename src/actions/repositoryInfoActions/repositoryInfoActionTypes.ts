@@ -7,6 +7,9 @@ import { ISetPrsLoadingStatusActionType } from "./isPrsLoading";
 import { ISetCommitsLoadingStatusActionType } from "./isCommitsLoading";
 import { ISetIssuesLoadingStatusActionType } from "./isIssuesLoading";
 
+/**
+ * Root Action Type for repository info actions
+ */
 type RepositoryInfoActionType =
   | ISetCurrentRepositoryActionType
   | IGetPullRequestInfoActionType

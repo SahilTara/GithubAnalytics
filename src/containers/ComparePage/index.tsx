@@ -24,10 +24,31 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { IIssueData } from "../../types/IIssueData";
 import { IPullRequest } from "../../types/IPullRequest";
+import SelectableItems from "../../components/SelectableItems";
 
 interface IProps {
+  /**
+   * Commit data, used for comparison
+   *
+   * @type {ICommitData[]}
+   * @memberof IProps
+   */
   commits: ICommitData[];
+
+  /**
+   * Issue data used for comparison
+   *
+   * @type {IIssueData[]}
+   * @memberof IProps
+   */
   issues: IIssueData[];
+
+  /**
+   * PR data used for comparison
+   *
+   * @type {IPullRequest[]}
+   * @memberof IProps
+   */
   prs: IPullRequest[];
 }
 
@@ -38,7 +59,7 @@ interface IStateProps {
 interface IDispatchProps {
   setTimeSpan: (timeSpan: TIME_SPAN) => any;
 }
-
+// initial states for compare page
 const commitsTotalInitial: ITextBarGraphData[] = [];
 const issuesTotalInitial: ITextBarGraphData[] = [];
 const prsTotalInitial: ITextBarGraphData[] = [];
@@ -49,9 +70,16 @@ const usersInitial: IUserColor[] = [];
 
 type Props = IProps & IStateProps & IDispatchProps;
 
-const ComparePage: React.FC<Props> = props => {
-  const { commits, issues, prs, timeSpan, setTimeSpan } = props;
-
+/**
+ * Page to compare user data, via graphs.
+ */
+const ComparePage: React.FC<Props> = ({
+  commits,
+  issues,
+  prs,
+  timeSpan,
+  setTimeSpan
+}) => {
   const timeSpans = [
     TIME_SPAN.LAST_7_DAYS,
     TIME_SPAN.LAST_MONTH,
@@ -111,7 +139,21 @@ const ComparePage: React.FC<Props> = props => {
     <Container>
       {console.log(users)}
       <div style={{ paddingTop: "20px" }}>
+        {/* Timespan Selector */}
+        <Row style={{ paddingBottom: "20px" }}>
+          <Col md={{ span: 2, offset: 10 }}>
+            <SelectableItems
+              options={timeSpans}
+              title={timeSpan}
+              className=""
+              id="time-span"
+              onChangeHook={selectTimeSpan}
+            />
+          </Col>
+        </Row>
+        {/* Main Content */}
         <Row>
+          {/* Total shows bar graph data */}
           {isTotal ? (
             <Col>
               <NumberVsTextBarGraph
@@ -141,6 +183,7 @@ const ComparePage: React.FC<Props> = props => {
             </Col>
           ) : (
             <Col>
+              {/* Daily shows line graph data */}
               <NumberVsTimeMultiLineGraph
                 title={"Compare Issues Closed"}
                 data={issuesOverTime}
@@ -148,7 +191,6 @@ const ComparePage: React.FC<Props> = props => {
                 yAxisLabel={"Issues"}
                 legend={false}
                 width={800}
-                timeSpan={timeSpan}
                 colors={users}
               />
               <NumberVsTimeMultiLineGraph
@@ -158,7 +200,6 @@ const ComparePage: React.FC<Props> = props => {
                 yAxisLabel={"Pull requests"}
                 legend={false}
                 width={800}
-                timeSpan={timeSpan}
                 colors={users}
               />
               <NumberVsTimeMultiLineGraph
@@ -168,7 +209,6 @@ const ComparePage: React.FC<Props> = props => {
                 yAxisLabel={"Commits"}
                 legend={false}
                 width={800}
-                timeSpan={timeSpan}
                 colors={users}
               />
             </Col>

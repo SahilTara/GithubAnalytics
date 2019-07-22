@@ -3,6 +3,12 @@ import IDonutGraphData from "../../types/IGraphData/IDonutGraphData";
 import IBarGraphData from "../../types/IGraphData/IBarGraphData";
 import { IPullRequest } from "../../types/IPullRequest";
 
+/**
+ * Gets data for Opened PR leaderboard
+ * @param prs PR data to get Opened PRs leaderboard data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getOpenedPrsLeaderboardData = (
   prs: IPullRequest[],
   dateToCompare: Date
@@ -32,6 +38,12 @@ const getOpenedPrsLeaderboardData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for Merged PR leaderboard
+ * @param prs PR data to get Merged PRs leaderboard data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getMergedPrsLeaderboardData = (
   prs: IPullRequest[],
   dateToCompare: Date
@@ -65,6 +77,12 @@ const getMergedPrsLeaderboardData = (
   return leaderboardGraphData;
 };
 
+/**
+ * Gets data for Opened PRs over time graph
+ * @param prs PR data to get Opened PRs over time data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getOpenedPrsOverTimeData = (
   prs: IPullRequest[],
   dateToCompare: Date
@@ -94,6 +112,12 @@ const getOpenedPrsOverTimeData = (
   return openedPrsOverTimeGraphData;
 };
 
+/**
+ * Gets average time to merge PRs raw data
+ * @param prs PR data to get average time to merge PRs raw data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getAverageTimeToMergePrsDataRaw = (
   prs: IPullRequest[],
   dateToCompare: Date
@@ -156,6 +180,12 @@ const getAverageTimeToMergePrsDataRaw = (
   return averageTimeToMergePrsGraphData;
 };
 
+/**
+ * Gets average time to merge PRs as hours data
+ * @param prs PR data to get average time to merge PRs as hours data for.
+ * @param dateToCompare minimum date that must have passed for data to be considered.
+ * @function
+ */
 const getAverageTimeToMergePrsAsHoursData = (
   prs: IPullRequest[],
   dateToCompare: Date

@@ -3,16 +3,55 @@ import { DropdownButton } from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 
 interface IProps {
+  /**
+   * Selectable options inside the dropdown
+   *
+   * @type {string[]}
+   * @memberof IProps
+   */
   options: string[];
+
+  /**
+   * Title of the dropdown
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+
+  /**
+   * CSS classname(s)
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   className: string;
+
+  /**
+   * The id of the component
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   id: string;
+
+  /**
+   * Hook that is called whenever an item is selected.
+   *
+   * @memberof IProps
+   * @callback
+   */
   onChangeHook: (key: string) => void;
 }
 
-const SelectableItems: React.FC<IProps> = (props: IProps) => {
-  const { options, title, id, className, onChangeHook } = props;
-
+/** Dropdown component */
+const SelectableItems: React.FC<IProps> = ({
+  options,
+  title,
+  id,
+  className,
+  onChangeHook
+}) => {
   const handleChange = (key: string) => {
     onChangeHook(key);
   };

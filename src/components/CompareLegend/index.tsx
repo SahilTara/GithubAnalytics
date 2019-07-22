@@ -1,16 +1,39 @@
-import { Card, Button, ToggleButtonGroup, Row, Col } from "react-bootstrap";
+import { Card, Button, ToggleButtonGroup } from "react-bootstrap";
 import { SearchableDiscreteColorLegend } from "react-vis";
-import React, { useState, useReducer, ReactElement, useEffect } from "react";
-import { SketchPicker, BlockPicker, TwitterPicker } from "react-color";
+import React, { useState, ReactElement } from "react";
+import { BlockPicker } from "react-color";
 import "./style.css";
 import IUserColor from "../../types/IUserColor";
 
 interface IProps {
+  /**
+   * A list of users and the colour + disable state associated with each.
+   *
+   * @type {IUserColor[]}
+   * @memberof IProps
+   */
   state: IUserColor[];
+
+  /**
+   * Called whenever mode is changed between total and daily
+   * @memberof IProps
+   * @callback
+   */
   modeCallBack: (isTotal: boolean) => void;
+
+  /**
+   * Called whenever an item changes (colour or disable status).
+   * @memberof IProps
+   * @callback
+   */
   itemCallBack: (item: IUserColor) => void;
 }
 
+/**
+ * Legend component used in the compare page. Has a total and daily button.
+ * Has a search bar embedded inside to search for users.
+ * Has a colour picker beside each user's name
+ */
 const CompareLegend: React.FC<IProps> = ({
   state,
   modeCallBack,
@@ -45,15 +68,27 @@ const CompareLegend: React.FC<IProps> = ({
     });
   };
 
+  /**
+   * Component that represents the state of every element inside the legend
+   */
   const LegendElement = (value: any) => {
     const [show, showPicker] = useState(false);
     const [chosenColor, chooseColor] = useState(value.value.color);
     const { disabled } = value.value;
-    const clickPicker = (e: any) => {
+
+    /**
+     * Function that toggles the color picker visibility.
+     */
+    const clickPicker = (
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
       showPicker(!show);
       e.stopPropagation();
     };
 
+    /**
+     * callback for a color change.
+     */
     const changeColor = (color: any) => {
       chooseColor(color);
       const updatedItem = {
@@ -113,7 +148,6 @@ const CompareLegend: React.FC<IProps> = ({
   };
 
   const legendElements = state.map(value => {
-    // console.log(value);
     return {
       title: <LegendElement value={value} />,
       color: value.color,

@@ -1,3 +1,8 @@
+/**
+ * Enum listing all repository info action types.
+ * @export
+ * @enum {string}
+ */
 export enum REPOSITORY_INFO_TYPE_KEYS {
   SET_CURRENT_REPOSITORY = "GA/repositoryInfo/SET_CURRENT_REPOSITORY",
   SET_TIME_SPAN = "GA/repositoryInfo/SET_TIME_SPAN",

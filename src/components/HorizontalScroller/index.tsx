@@ -2,19 +2,36 @@ import React, { Component, useState } from "react";
 import IRepository from "../../types/IRespository";
 import ItemsCarousel from "react-items-carousel";
 import RepositoryCard from "../RepositoryCard";
-import { withRouter, RouteComponentProps } from "react-router";
 
-// Horizontal scroller takes in two parameters: Title and repositories
 interface IProps {
+  /**
+   * The title of the horizontal scroller, displayed right above carousel.
+   *
+   * @type {string}
+   * @memberof IProps
+   */
   title: string;
+  /**
+   * List of repositories to show inside carousel
+   *
+   * @type {IRepository[]}
+   * @memberof IProps
+   */
   repos: IRepository[];
+
+  /**
+   * Click handler for the repositories, passed onto all cards.
+   *
+   * @memberof IProps
+   */
   onClick: (repository: IRepository) => void;
 }
 
-const HorizontalScroller: React.FC<IProps> = props => {
-  const { repos, title, onClick } = props;
-
-  const [state, setState] = useState({ activeItemIndex: 0 });
+/**
+ *  Horizontal scroller is a carousel-like component for repositories.
+ */
+const HorizontalScroller: React.FC<IProps> = ({ repos, title, onClick }) => {
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
 
   return (
     <>
@@ -33,17 +50,15 @@ const HorizontalScroller: React.FC<IProps> = props => {
           outsideChevron={true}
           showSlither={true}
           firstAndLastGutter={false}
-          activeItemIndex={state.activeItemIndex}
-          requestToChangeActive={(value: number) =>
-            setState({ activeItemIndex: value })
-          }
+          activeItemIndex={activeItemIndex}
+          requestToChangeActive={(value: number) => setActiveItemIndex(value)}
           rightChevron={">"}
           leftChevron={"<"}
         >
           {repos.map((repository: IRepository) => {
             return (
               <RepositoryCard
-                key={`${repository.author}/${repository.name}`}
+                key={`${title}-${repository.author}/${repository.name}`}
                 info={repository}
                 onClick={onClick}
               />

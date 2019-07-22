@@ -7,6 +7,9 @@ import loadingStatus from "./loadingStatus";
 
 import { combineReducers } from "redux";
 
+/**
+ * Repository Info Root Reducer
+ */
 const repositoryInfoReducer = combineReducers({
   pullRequestInfo,
   issueInfo,

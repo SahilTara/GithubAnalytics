@@ -9,6 +9,10 @@ export interface IGetPopularRepositoriesActionType {
   payload: IRepository[];
 }
 
+/**
+ * Action for getting trending's repositories into the redux store.
+ * @function
+ */
 export const getPopularRepositoriesAction = () => {
   return async (dispatch: Dispatch<DashboardInfoActionType>) => {
     const api = new GithubApiService();

@@ -3,10 +3,25 @@ import { InputGroup, Button, Form } from "react-bootstrap";
 import Octicon, { Search } from "@primer/octicons-react";
 
 interface IProps {
+  /**
+   * Search handler for the search bar
+   * @memberof IProps
+   * @callback
+   */
   searchHandler: (textToSearch: string) => void;
+
+  /**
+   * Initial value of the search bar
+   *
+   * @memberof IProps
+   * @type {string}
+   */
   initialValue?: string;
 }
 
+/**
+ * Search bar component with find repositories text filled in
+ */
 const SearchBar: React.FC<IProps> = ({ searchHandler, initialValue = "" }) => {
   const [validated, setValidated] = useState(false);
   const [textToSearch, setTextToSearch] = useState(initialValue);

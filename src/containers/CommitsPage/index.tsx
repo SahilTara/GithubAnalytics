@@ -23,9 +23,36 @@ import classNames from "classnames";
 import styles from "./styles.module.css";
 
 interface IProps {
+  /**
+   * Total commits made
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   commitsMade: number;
+
+  /**
+   * Total lines added
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   linesAdded: number;
+
+  /**
+   * Total lines deleted
+   *
+   * @type {number}
+   * @memberof IProps
+   */
   linesDeleted: number;
+
+  /**
+   * Commit data, which is used for graphing info on the page
+   *
+   * @type {ICommitData[]}
+   * @memberof IProps
+   */
   commits: ICommitData[];
 }
 
@@ -37,22 +64,24 @@ interface IDispatchProps {
   setTimeSpan: (timeSpan: TIME_SPAN) => any;
 }
 
+// Initial states for state variables
 const commitLeaderboardInitial: IDonutGraphData[] = [];
 const commitsOverTimeInitial: IBarGraphData[] = [];
 const additionsAndDeletionsInitial: IBarGraphData[][] = [];
 
 type Props = IProps & IStateProps & IDispatchProps;
 
-const CommitsPage: React.FC<Props> = props => {
-  const {
-    commits,
-    commitsMade,
-    linesAdded,
-    linesDeleted,
-    timeSpan,
-    setTimeSpan
-  } = props;
-
+/**
+ * Page to show commit related info.
+ */
+const CommitsPage: React.FC<Props> = ({
+  commits,
+  commitsMade,
+  linesAdded,
+  linesDeleted,
+  timeSpan,
+  setTimeSpan
+}) => {
   const timeSpans = [
     TIME_SPAN.LAST_7_DAYS,
     TIME_SPAN.LAST_MONTH,
@@ -71,6 +100,7 @@ const CommitsPage: React.FC<Props> = props => {
   );
 
   const selectTimeSpan = (key: string) => {
+    // key will always be timespan here.
     setTimeSpan(key as TIME_SPAN);
   };
 
@@ -97,6 +127,7 @@ const CommitsPage: React.FC<Props> = props => {
         </h2>
       )}
       <div style={{ paddingTop: "20px" }}>
+        {/* Timespan Selector */}
         <Row style={{ paddingBottom: "20px" }}>
           <Col md={{ span: 2, offset: 10 }}>
             <SelectableItems
@@ -108,8 +139,11 @@ const CommitsPage: React.FC<Props> = props => {
             />
           </Col>
         </Row>
+
+        {/* Main Content */}
         <Row>
           <Col>
+            {/* Summary Cards */}
             <Row>
               <Col>
                 <SummaryCard count={commitsMade} subtitle={"Commits"} />
@@ -121,6 +155,7 @@ const CommitsPage: React.FC<Props> = props => {
                 <SummaryCard count={linesDeleted} subtitle={"Deletions"} />
               </Col>
             </Row>
+            {/* Graphs */}
             <>
               {commitsMade > 0 && (
                 <NumberVsTimeBarGraph
@@ -143,6 +178,7 @@ const CommitsPage: React.FC<Props> = props => {
             </>
           </Col>
           <Col>
+            {/* Leaderboard + Donut Graphs */}
             {commitLeaderboard.length > 0 && (
               <DonutGraphWithLeaderboard
                 data={commitLeaderboard}

@@ -6,6 +6,11 @@ export interface ISetCurrentRepositoryActionType {
   payload: IRepository;
 }
 
+/**
+ * Sets the current selected repository in the redux store.
+ * @param repository the repository to set inside the redux store.
+ * @function
+ */
 export const setCurrentRepositoryAction = (
   repository: IRepository
 ): ISetCurrentRepositoryActionType => {
