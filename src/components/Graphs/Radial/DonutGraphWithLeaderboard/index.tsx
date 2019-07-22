@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Card, Row, Col } from "react-bootstrap";
-import {
-  RadialChart,
-  RadialChartProps,
-  RadialChartPoint,
-  Hint
-} from "react-vis";
+import { RadialChart, RadialChartProps, RadialChartPoint } from "react-vis";
 import IDonutGraphData from "../../../../types/IGraphData/IDonutGraphData";
 import styles from "./styles.module.css";
 import classNames from "classnames";
@@ -106,9 +101,8 @@ const DonutGraphWithLeaderboard: React.FC<IProps> = ({
 
   let mouseOver = (datapoint: RadialChartPoint) => {
     setShowingValue(true);
-    setTooltip(datapoint.label);
+    setTooltip(datapoint.label || "");
   };
-  console.log({ donut: theData });
   return (
     <div>
       <Card style={{ marginBottom: "20px" }}>
