@@ -6,13 +6,13 @@
 - To learn some data visualization libraries.
 - To further improve our React development skills.
 
-## Pre Opensource
+## Pre Deployment
 - [ ] Migrate to GraphQL.
 - [ ] Investigate removing commits per day in favour of PR additions + deletions via GraphQL
 - [ ] Clean up the code a bit more.
 - [ ] Add percent code changed per day.
 
-## Post Opensource
+## Post Deployment
 - [ ] Clean up Readme.md make it nice!
 - [ ] Investigate more empowering statistics
 - [ ] Provide warnings and such
