@@ -3,7 +3,7 @@ import popularRepos from "./popularRepositoryReducer";
 import userRepos from "./userRepositoryReducer";
 
 /**
- * Dashboard root reducer
+ * Environment Info Root Reducer
  */
 const dashboardInfoReducer = combineReducers({
   userRepos,
