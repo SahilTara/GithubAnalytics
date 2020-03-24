@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import isLoggedIn from "./loginStatusReducer";
 
 /**
- * Environment Info root reducer
+ * Environment Info Root Reducer
  */
 const environmentInfoReducer = combineReducers({
   isLoggedIn
